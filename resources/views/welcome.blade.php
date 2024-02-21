@@ -19,7 +19,9 @@
         <script type="text/javascript" src="/js/turnjs4/zoom.min.js"></script>
 
         <!-- Scripts -->
-        @vite(['resources/css/app.css', 'resources/js/app.js'])
+        <link href="/css/app.css" rel="stylesheet">
+        <script src="https://cdn.tailwindcss.com"></script>
+        <script type="text/javascript" src="/js/app.js"></script>
     </head>
     <body class="antialiased">
     <!-- Section: Design Block -->

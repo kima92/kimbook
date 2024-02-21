@@ -18,8 +18,9 @@
         <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
         <link href="/css/book.css" rel="stylesheet">
 
-        <!-- Scripts -->
-        @vite(['resources/css/app.css', 'resources/js/app.js'])
+        <link href="/css/app.css" rel="stylesheet">
+        <script src="https://cdn.tailwindcss.com"></script>
+        <script type="text/javascript" src="/js/app.js"></script>
     </head>
     <body class="font-sans antialiased" style="background-color: #0b1012">
         <div class="min-h-screen bg-gray-100">

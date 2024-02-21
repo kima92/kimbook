@@ -27,12 +27,12 @@ use Illuminate\Support\Str;
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Chapter> $chapters
  * @property-read int|null $chapters_count
- * @property-read mixed $costs_usd
+ * @property-read string|null $costs_usd
+ * @property-read string $status_message
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Reaction> $reactions
  * @property-read int|null $reactions_count
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Reading> $readings
  * @property-read int|null $readings_count
- * @property-read mixed $status_message
  * @property-read \App\Models\User|null $user
  * @method static \Illuminate\Database\Eloquent\Builder|Book newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Book newQuery()
@@ -95,13 +95,14 @@ class Book extends Model
         return $this->hasMany(Reading::class);
     }
 
-    protected function statusMessage(): Attribute
+    protected function getStatusMessageAttribute(): string
     {
-        return Attribute::make(fn() => $this->status->translated());
+        return $this->status->translated();
     }
-    protected function costsUsd(): Attribute
+
+    protected function getCostsUsdAttribute(): ?string
     {
-        return Attribute::make(fn() => $this->additional_data['costs_usd'] ?? null);
+        return $this->additional_data['costs_usd'] ?? null;
     }
 
     public function toBookArray(): array

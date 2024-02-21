@@ -14,8 +14,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property int $book_id
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
- * @property-read \App\Models\Book|null $book
- * @property-read \App\Models\User|null $user
+ * @property-read \App\Models\Book $book
+ * @property-read \App\Models\User $user
  * @method static \Illuminate\Database\Eloquent\Builder|Reading newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Reading newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Reading query()

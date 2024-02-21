@@ -2,12 +2,11 @@
 
 namespace App\Models;
 
-use Filament\Models\Contracts\FilamentUser;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-use Laravel\Sanctum\HasApiTokens;
+//use Laravel\Sanctum\HasApiTokens;
 
 /**
  * App\Models\User
@@ -28,9 +27,7 @@ use Laravel\Sanctum\HasApiTokens;
  * @property-read int|null $reactions_count
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Reading> $readings
  * @property-read int|null $readings_count
- * @property-read \Illuminate\Database\Eloquent\Collection<int, \Laravel\Sanctum\PersonalAccessToken> $tokens
- * @property-read int|null $tokens_count
- * @method static \Database\Factories\UserFactory factory($count = null, $state = [])
+ * @method static \Database\Factories\UserFactory factory(...$parameters)
  * @method static \Illuminate\Database\Eloquent\Builder|User newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|User newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|User query()
@@ -44,10 +41,11 @@ use Laravel\Sanctum\HasApiTokens;
  * @method static \Illuminate\Database\Eloquent\Builder|User whereUpdatedAt($value)
  * @mixin \Eloquent
  */
-class User extends Authenticatable implements FilamentUser
+class User extends Authenticatable// implements FilamentUser
 {
 
-    use HasApiTokens, HasFactory, Notifiable;
+    use HasFactory, Notifiable;
+//    use HasApiTokens;
 
     /**
      * The attributes that are mass assignable.
@@ -97,10 +95,5 @@ class User extends Authenticatable implements FilamentUser
     public function exceededViews(Book $book): bool
     {
         return false;
-    }
-
-    public function canAccessPanel(\Filament\Panel $panel): bool
-    {
-        return $this->email == "kima92@gmail.com";
     }
 }

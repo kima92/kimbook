@@ -4,6 +4,9 @@ namespace App\Providers;
 
 use App\Models\User;
 use Illuminate\Support\ServiceProvider;
+use OpenAI;
+use OpenAI\Client;
+use OpenAI\Contracts\ClientContract;
 use PayMe\Remotisan\Facades\Remotisan;
 
 class AppServiceProvider extends ServiceProvider
@@ -26,6 +29,25 @@ class AppServiceProvider extends ServiceProvider
             $user = $request->user("web");
             return $user->name;
         });
+
+        $this->app->singleton(ClientContract::class, static function (): Client {
+            $apiKey = config('openai.api_key');
+            $organization = config('openai.organization');
+
+            if (! is_string($apiKey) || ($organization !== null && ! is_string($organization))) {
+                throw new \RuntimeException("missing API Key");
+            }
+
+            return OpenAI::factory()
+                ->withApiKey($apiKey)
+                ->withOrganization($organization)
+                ->withHttpHeader('OpenAI-Beta', 'assistants=v1')
+                ->withHttpClient(new \GuzzleHttp\Client(['timeout' => config('openai.request_timeout', 30)]))
+                ->make();
+        });
+
+        $this->app->alias(ClientContract::class, 'openai');
+        $this->app->alias(ClientContract::class, Client::class);
     }
 
     /**

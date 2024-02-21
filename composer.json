@@ -8,26 +8,24 @@
         "php": "^8.1.23",
         "ext-json": "*",
         "doctrine/dbal": "^3.0",
-        "filament/actions": "^3.2",
-        "filament/filament": "^3.2",
+        "fruitcake/laravel-cors": "^2.0",
         "guzzlehttp/guzzle": "^7.0.1",
-        "laravel/framework": "^10.0",
-        "laravel/pulse": "^1.0@beta",
-        "laravel/sanctum": "^3.2",
+        "laravel/framework": "^8.0",
         "laravel/tinker": "^2.5",
-        "openai-php/laravel": "^0.8.1",
+        "openai-php/client": "^v0.8.0",
         "paymeservice/remotisan": "^1.7"
     },
     "require-dev": {
         "barryvdh/laravel-ide-helper": "^2.13",
         "fakerphp/faker": "^1.9.1",
-        "laravel-lang/common": "^4.1",
-        "laravel/breeze": "^1.21",
+        "laravel-lang/common": "^3.0",
+        "laravel/breeze": "^1.9.2",
         "laravel/sail": "^1.0.1",
-        "mockery/mockery": "^1.4.4",
-        "nunomaduro/collision": "^7.7",
-        "phpunit/phpunit": "^10.0",
-        "spatie/laravel-ignition": "^2.0"
+        "facade/ignition": "^2.3.6",
+        "filp/whoops": "^2.0",
+        "mockery/mockery": "^1.0",
+        "nunomaduro/collision": "^5.0",
+        "phpunit/phpunit": "^10.0"
     },
     "autoload": {
         "psr-4": {
@@ -45,8 +43,7 @@
         "post-autoload-dump": [
             "Illuminate\\Foundation\\ComposerScripts::postAutoloadDump",
             "@php artisan package:discover --ansi",
-            "php artisan ide-helper:models --smart-reset --write",
-            "@php artisan filament:upgrade"
+            "php artisan ide-helper:models --smart-reset --write"
         ],
         "post-update-cmd": [
             "@php artisan vendor:publish --tag=laravel-assets --ansi --force"
