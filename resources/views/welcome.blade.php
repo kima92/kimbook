@@ -19,7 +19,7 @@
         <script type="text/javascript" src="/js/turnjs4/zoom.min.js"></script>
 
         <!-- Scripts -->
-        <link href="/build/assets/mw3gNgQE.css" rel="stylesheet">
+        <link href="/build/assets/app-mw3gNgQE.css" rel="stylesheet">
 {{--        <script src="https://cdn.tailwindcss.com"></script>--}}
         <script type="text/javascript" src="/build/assets/app-9mbrzSRH.js" defer></script>
     </head>
