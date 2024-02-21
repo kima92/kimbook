@@ -7,8 +7,8 @@
         <form hx-post="/books" hx-target="#spin" hx-swap="outerHTML" class="flex flex-col">
             {{ __("Dive into a world of imagination where you and your child collaborate together to create tales that are uniquely yours, complete with beautiful artwork.") }}
             @csrf
-            <div class="mt-3 lg:flex lg:flex-row lg:justify-center lg:gap-3">
-                <select name="age" class="bg-black border-2 rounded border-white focus:border-white lg:w-1/6">
+            <div class="mt-3 flex flex-col lg:flex-row lg:justify-center lg:gap-3 gap-y-1">
+                <select name="age" class="bg-black border-2 rounded border-white focus:border-white w-full lg:w-1/6">
                     <option disabled selected>-בחר גיל-</option>
                     <option>3-5</option>
                     <option>6-8</option>
@@ -18,7 +18,7 @@
 
 {{--                <input type="text" name="subject1" class="bg-black border-2 rounded border-white focus:border-white lg:w-1/5">--}}
 {{--                <input type="text" name="subject2" class="bg-black border-2 rounded border-white focus:border-white lg:w-1/5">--}}
-                <select name="moral" class="bg-black border-2 rounded border-white focus:border-white lg:w-1/5">
+                <select name="moral" class="bg-black border-2 rounded border-white focus:border-white w-full lg:w-1/5">
                     <option disabled selected>-בחר ערך חינוכי-</option>
                     <option value="parent-respact">כיבוד הורים</option>
                     <option value="friendship">חברות</option>
@@ -27,20 +27,20 @@
                     <option value="none">ללא</option>
                 </select>
 
-                <div class="lg:w-1/8">
+                <div class="w-full lg:w-1/6 text-right lg:text-center">
                     <label>
                         <input type="checkbox" name="isAdultReader" class="bg-black border-2 rounded border-white focus:border-white">
                         המקריא בגיר
                     </label>
                 </div>
 
-                <select name="language" class="bg-black border-2 rounded border-white focus:border-white lg:w-1/6">
+                <select name="language" class="bg-black border-2 rounded border-white focus:border-white w-full lg:w-1/6">
                     <option disabled>-בחר שפה-</option>
                     <option value="he" selected>עברית</option>
                     <option value="en">אנגלית</option>
                 </select>
 
-                <div class="lg:w-1/8">
+                <div class="w-full lg:w-1/6 text-right lg:text-center">
                     <label>
                         <input type="checkbox" checked name="pictures" class="bg-black border-2 rounded border-white focus:border-white">
                         צור תמונות

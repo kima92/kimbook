@@ -18,8 +18,8 @@
         <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
         <link href="/css/book.css" rel="stylesheet">
 
-        <link href="/build/assets/app-C1cj6HWe.css" rel="stylesheet">
-        <script src="https://cdn.tailwindcss.com"></script>
+        <link href="/build/assets/mw3gNgQE.css" rel="stylesheet">
+{{--        <script src="https://cdn.tailwindcss.com"></script>--}}
         <script type="text/javascript" src="/build/assets/app-9mbrzSRH.js" defer></script>
     </head>
     <body class="font-sans antialiased" style="background-color: #0b1012">
