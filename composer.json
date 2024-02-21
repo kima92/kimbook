@@ -13,7 +13,8 @@
         "laravel/framework": "^8.0",
         "laravel/tinker": "^2.5",
         "openai-php/client": "^v0.8.0",
-        "paymeservice/remotisan": "^1.7"
+        "paymeservice/remotisan": "^1.7",
+        "symfony/css-selector": "^6.0"
     },
     "require-dev": {
         "barryvdh/laravel-ide-helper": "^2.13",
