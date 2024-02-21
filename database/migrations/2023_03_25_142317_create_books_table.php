@@ -18,7 +18,7 @@ class CreateBooksTable extends Migration
             $table->id();
             $table->smallInteger('status');
             $table->string('title');
-            $table->uuid()->unique();
+            $table->uuid('uuid')->unique();
             $table->foreignIdFor(User::class);
             $table->text('description')->nullable();
             $table->text('input')->nullable();
