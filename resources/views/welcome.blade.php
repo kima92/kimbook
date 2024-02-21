@@ -19,9 +19,9 @@
         <script type="text/javascript" src="/js/turnjs4/zoom.min.js"></script>
 
         <!-- Scripts -->
-        <link href="/css/app.css" rel="stylesheet">
+        <link href="/build/assets/app-C1cj6HWe.css" rel="stylesheet">
         <script src="https://cdn.tailwindcss.com"></script>
-        <script type="text/javascript" src="/js/app.js"></script>
+        <script type="text/javascript" src="/build/assets/app-9mbrzSRH.js"></script>
     </head>
     <body class="antialiased">
     <!-- Section: Design Block -->
