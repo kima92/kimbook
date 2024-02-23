@@ -6,7 +6,6 @@ use App\Actions\GenerateBook;
 use App\Enums\BookStatuses;
 use App\Models\Book;
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldBeUnique;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
@@ -32,8 +31,7 @@ class StartGeneratingBook implements ShouldQueue
      */
     public function handle(GenerateBook $gb): void
     {
-        \Log::debug($x = "[StartGeneratingBook][handle] Got book {$this->book->uuid}");
-        echo $x."\n";
+        \Log::debug("[StartGeneratingBook][handle] Got book {$this->book->uuid}");
         $gb->handle($this->book);
     }
 
@@ -42,8 +40,7 @@ class StartGeneratingBook implements ShouldQueue
      */
     public function failed(Throwable $exception): void
     {
-        \Log::debug($x ="[StartGeneratingBook][fail] Got book {$this->book->uuid} with message: {$exception->getMessage()}\n{$exception->getTraceAsString()}");
-        echo $x."\n";
+        \Log::debug("[StartGeneratingBook][fail] Got book {$this->book->uuid} with message: {$exception->getMessage()}\n{$exception->getTraceAsString()}");
         $this->book->status = BookStatuses::FailedText;
         $this->book->save();
     }

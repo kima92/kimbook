@@ -18,13 +18,12 @@
                 console.log(book);
 
                 statusMessageElement.textContent = book.status_message;
-                if ({{\App\Enums\BookStatuses::Ready}} === book.status) {
-
+                if ({{\App\Enums\BookStatuses::Ready->value}} === book.status) {
                     setTimeout(() => { window.location.href = "/books/" + book.uuid; }, 3000);
                     return;
                 }
 
-                if (! [{{\App\Enums\BookStatuses::FailedText}},{{\App\Enums\BookStatuses::FailedImages}},{{\App\Enums\BookStatuses::Ready}}].includes(book.status)) {
+                if (! [{{\App\Enums\BookStatuses::FailedText->value}},{{\App\Enums\BookStatuses::FailedImages->value}},{{\App\Enums\BookStatuses::Ready->value}}].includes(book.status)) {
                     setTimeout(() => { query(); }, 3000);
                     return;
                 }

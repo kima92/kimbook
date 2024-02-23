@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Actions\GenerateBook;
 use App\Enums\BookStatuses;
 use App\Jobs\StartGeneratingBook;
 use App\Models\Book;

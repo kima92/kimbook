@@ -10,7 +10,6 @@ namespace App\Actions;
 
 use App\Enums\BookStatuses;
 use App\Jobs\GenerateImage;
-use App\Models\Author;
 use App\Models\Book;
 use App\Models\Chapter;
 use App\Models\Image;
