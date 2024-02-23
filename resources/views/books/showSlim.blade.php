@@ -11,6 +11,9 @@
     <script type="text/javascript" src="/js/turnjs4/hash.js"></script>
     <script type="text/javascript" src="/js/turnjs4/turn.min.js"></script>
     <script type="text/javascript" src="/js/turnjs4/zoom.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Secular+One&display=swap" rel="stylesheet">
     <link href="/css/book.css" rel="stylesheet">
 </head>
 <body style="background-color: transparent;   display: flex;

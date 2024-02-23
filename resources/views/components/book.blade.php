@@ -6,15 +6,16 @@
                                                                                                           padding: 30px;
                                                                                                           background-image: url('{{$page["image"]}}');
                                                                                                           ">@endif
-                @if($page["title"] ?? null)<div><h3 class="text-center text-2xl bg-[hsla(0,0%,100%,0.70)] leading-6" style="direction: rtl; ">{{ $page["title"] }}</h3></div>@endif
-                <div class="text-xl" style="direction: rtl; padding: 30px;">
+                @if($page["title"] ?? null)<div><h3 class="text-center text-5xl leading-tight" style="font-family: 'Secular One', sans-serif;direction: rtl; -webkit-text-stroke-color: #FFFFFF; -webkit-text-stroke-width: 1px">{{ $page["title"] }}</h3></div>@endif
+                <div class="text-2xl h-full flex flex-col gap-2 justify-center justify-items-center " style="direction: rtl; padding: 30px 30px 0 30px; height: 460px">
                     @foreach(explode("\n", $page["content"] ?? "") as $p)
-                        <p class="mb-2">{{ $p }}</p>
+                        <p @if($page["image"] ?? null)style="-webkit-text-stroke-color: #FFFFFF; -webkit-text-stroke-width: thin" class="text-4xl" @endif>{{ $p }}</p>
                     @endforeach
                 </div>
-                @if($page["image"] ?? null)</div>@endif
+                @if($page["pageNum"] ?? null)<div class="text-center text-gray-400">-{{$page["pageNum"]}}-</div>@endif
+            @if($page["image"] ?? null)</div>@endif
             @if($page["isCover"] ?? false)
-                <div class="w-[calc(100%-2rem)] h-full absolute top-0 left-0 bottom-0" style="box-shadow: 0 1.1px 1.5px rgba(0,0,0,.4), 0 2.8px 3.9px rgba(0,0,0,.4), 0 5.8px 7.9px rgba(0,0,0,.08), 0 12.0455px 16.4px rgba(0,0,0,.4), 0 33px 45px rgba(0,0,0,.04);"></div>
+                <div class="w-[calc(100%-2rem)] h-full absolute top-0 @if($i == 0) left-0 @else right-0 @endif bottom-0" style="box-shadow: 0 1.1px 1.5px rgba(0,0,0,.4), 0 2.8px 3.9px rgba(0,0,0,.4), 0 5.8px 7.9px rgba(0,0,0,.08), 0 12.0455px 16.4px rgba(0,0,0,.4), 0 33px 45px rgba(0,0,0,.8);"></div>
             @endif
         </div>
     @endforeach

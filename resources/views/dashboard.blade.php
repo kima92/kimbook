@@ -40,12 +40,21 @@
                     <option value="en">אנגלית</option>
                 </select>
 
-                <div class="w-full lg:w-1/6 text-right lg:text-center">
-                    <label>
-                        <input type="checkbox" checked name="pictures" class="bg-black border-2 rounded border-white focus:border-white">
-                        צור תמונות
-                    </label>
-                </div>
+                <select name="art-style" class="bg-black border-2 rounded border-white focus:border-white w-full lg:w-1/6">
+                    <option disabled selected>-עיצוב-</option>
+                    <option value="Pixar">Pixar</option>
+                    <option value="Walt Disney">וולט דיסני</option>
+                    <option value="Anime">אנימה</option>
+                    <option value="asked-in-text">אציין בעצמי</option>
+                    <option value="random">אקראי</option>
+                </select>
+
+{{--                <div class="w-full lg:w-1/6 text-right lg:text-center">--}}
+{{--                    <label>--}}
+{{--                        <input type="checkbox" checked name="pictures" class="bg-black border-2 rounded border-white focus:border-white">--}}
+{{--                        צור תמונות--}}
+{{--                    </label>--}}
+{{--                </div>--}}
             </div>
             <textarea required minlength="15" id="plot" name="plot" cols="4" maxlength="500" class="mt-4 h-28 rounded border-2 bg-[hsla(0,0%,0%,0.70)] border-white font-medium text-white focus:border-white"></textarea>
             <button type="submit" class="mt-4 rounded border-2 border-white px-[46px] pt-[14px] pb-[12px] text-sm font-medium uppercase leading-normal text-white transition duration-150 ease-in-out hover:border-green-200 hover:bg-green-200 hover:bg-opacity-10 hover:text-green-200 focus:border-green-200 focus:text-green-200 focus:outline-none focus:ring-0 active:border-green-200 active:text-green-200">
