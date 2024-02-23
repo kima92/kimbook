@@ -18,6 +18,7 @@ use Illuminate\Bus\Batch;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Bus;
+use JsonException;
 use Log;
 use OpenAI\Contracts\ClientContract;
 use OpenAI\Laravel\Facades\OpenAI;
@@ -171,7 +172,14 @@ class GenerateBook
 
             Log::debug("[GenerateBook][generateMessage] OpenAI message", $result->choices[0]->message->toArray());
 
-            if (!Str::isJson($this->getJsonFromMessage($result->choices[0]->message->content))) {
+            try {
+                json_decode($this->getJsonFromMessage($result->choices[0]->message->content), true, 512, JSON_THROW_ON_ERROR);
+                $isJson = true;
+            } catch (JsonException) {
+                $isJson = false;
+            }
+
+            if (!$isJson) {
                 throw new \RuntimeException("Malformed response from openAI");
             }
 
