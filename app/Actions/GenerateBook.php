@@ -20,9 +20,9 @@ use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Bus;
 use Log;
+use OpenAI\Contracts\ClientContract;
 use OpenAI\Laravel\Facades\OpenAI;
 use Str;
-use Symfony\Component\VarDumper\VarDumper;
 use Throwable;
 
 class GenerateBook
@@ -160,7 +160,7 @@ class GenerateBook
         }
 
         $result = retry(1, function () {
-            $result = OpenAI::chat()->create([
+            $result = app(ClientContract::class)->chat()->create([
                 'model'    => $this->currentModel,
 //            'model' => 'gpt-4',
                 'messages' => $this->messages,

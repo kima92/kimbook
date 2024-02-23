@@ -2,18 +2,14 @@
 
 namespace App\Jobs;
 
-use App\Actions\GenerateBook;
-use App\Models\Book;
 use App\Models\Image;
 use Illuminate\Bus\Batchable;
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldBeUnique;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
-use Illuminate\Support\Facades\DB;
-use OpenAI\Laravel\Facades\OpenAI;
+use OpenAI\Contracts\ClientContract;
 use OpenAI\Responses\Images\CreateResponse;
 
 class GenerateImage implements ShouldQueue
@@ -50,7 +46,7 @@ class GenerateImage implements ShouldQueue
         } else {
 
             /** @var CreateResponse $response */
-            $response = retry(1, fn() => OpenAI::images()->create([
+            $response = retry(1, fn() => app(ClientContract::class)->images()->create([
                 'model'           => 'dall-e-3',
                 'prompt'          => \Str::remove("Illustrate ", $this->image->prompt),
                 'n'               => 1,
