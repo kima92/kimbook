@@ -62,7 +62,7 @@ class GenerateImage implements ShouldQueue
 
         $data = $response->data[0];
 
-        $this->image->book->newQuery()->incrementEach(["additional_data->costs_usd" => "0.040"]);
+        $this->image->book->newQuery()->increment("additional_data->costs_usd", "0.040");
         $this->image->image_url = $data->url;
         $this->image->save();
 
