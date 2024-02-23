@@ -70,27 +70,27 @@
     <script>
         const words = ["חבורת ילדים בני 8 ממושב בשפלה בונים מחנה בנחל שליד הבית", "ספר ילדים עם איורים בסגנון וולט דיסני שמספר על הרפתאותיו של יונתן בספארי בדרום אפריקה", "קים אוהבת ללכת לחוג בלט אך לאחרונה פחות מתחשק לה. נא ליצור ספר שיעודד אותה ללכת לחוג וילמד אותה על התמדה"];
         const plotElement = document.getElementById("plot");
-        let i = 0;
-        let j = 0;
+        let iTyping = 0;
+        let jTyping = 0;
         let currentWord = "";
         let isDeleting = false;
 
         function type() {
-            currentWord = words[i];
+            currentWord = words[iTyping];
             if (isDeleting) {
-                plotElement.placeholder = currentWord.substring(0, j-1);
-                j--;
-                if (j === 0) {
+                plotElement.placeholder = currentWord.substring(0, jTyping-1);
+                jTyping--;
+                if (jTyping === 0) {
                     isDeleting = false;
-                    i++;
-                    if (i === words.length) {
-                        i = 0;
+                    iTyping++;
+                    if (iTyping === words.length) {
+                        iTyping = 0;
                     }
                 }
             } else {
-                plotElement.placeholder = currentWord.substring(0, j+1);
-                j++;
-                if (j === currentWord.length) {
+                plotElement.placeholder = currentWord.substring(0, jTyping+1);
+                jTyping++;
+                if (jTyping === currentWord.length) {
                     isDeleting = true;
 
                     setTimeout(type, 3000);

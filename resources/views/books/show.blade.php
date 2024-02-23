@@ -63,8 +63,4 @@
         <div class="mt-12">
         </div>
     </div>
-
-
-
-
 </x-app-layout>
