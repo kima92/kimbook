@@ -3,6 +3,9 @@
 namespace App\Providers;
 
 use App\Models\User;
+use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Request;
 use Illuminate\Support\ServiceProvider;
 use OpenAI;
 use OpenAI\Client;
@@ -18,6 +21,24 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register()
     {
+        App::terminating(function() {
+            if (app()->runningInConsole()) {
+                $method = "Console";
+                $path = join(" ", $_SERVER['argv']);
+            } else {
+                $method = Request::method();
+
+                if ($queryString = Arr::get($_SERVER, "QUERY_STRING")) {
+                    $path = Request::path() . "?" . $queryString;
+                } else {
+                    $path = Request::getRequestUri();
+                }
+            }
+
+            $runtime = defined('LARAVEL_START') ? round((microtime(true) - LARAVEL_START), 4) : 0;
+            \Log::debug("[Runtime][{$method}] {$path} {$runtime}");
+        });
+
         Remotisan::authWith("super", function(\Illuminate\Http\Request $request) {
             /** @var User $user */
             $user = $request->user('web');
