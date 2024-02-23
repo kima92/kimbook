@@ -12,7 +12,12 @@
 
     console.log({statusMessageElement});
     function query() {
-        fetch("/books/{{$id}}")
+        fetch("/books/{{$id}}", {
+            method: 'GET', // Although 'GET' is the default, it's good to be explicit here
+            headers: {
+                'Accept': 'application/json', // This tells the server that the client expects JSON
+            }
+        })
             .then(response => {
                 if (!response.ok) {
                     throw new Error('Network response was not ok');
