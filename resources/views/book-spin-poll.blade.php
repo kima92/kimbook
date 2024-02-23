@@ -12,9 +12,14 @@
 
     console.log({statusMessageElement});
     function query() {
-        axios.get("/books/{{$id}}")
+        fetch("/books/{{$id}}")
             .then(response => {
-                let book = response.data
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json(); // This converts the response body to JSON
+            })
+            .then(book => {
                 console.log(book);
 
                 statusMessageElement.textContent = book.status_message;
@@ -23,15 +28,16 @@
                     return;
                 }
 
-                if (! [{{\App\Enums\BookStatuses::FailedText->value}},{{\App\Enums\BookStatuses::FailedImages->value}},{{\App\Enums\BookStatuses::Ready->value}}].includes(book.status)) {
+                if (![{{\App\Enums\BookStatuses::FailedText->value}}, {{\App\Enums\BookStatuses::FailedImages->value}}, {{\App\Enums\BookStatuses::Ready->value}}].includes(book.status)) {
                     setTimeout(() => { query(); }, 3000);
                     return;
                 }
 
                 spinnerElement.classList.add("hidden");
-            }).catch(e => {
-                console.log(e);
             })
+            .catch(e => {
+                console.error('There has been a problem with your fetch operation:', e);
+            });
     }
 
     query();
