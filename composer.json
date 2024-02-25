@@ -14,6 +14,7 @@
         "laravel/tinker": "^2.5",
         "openai-php/client": "^v0.8.0",
         "paymeservice/remotisan": "^1.7",
+        "stichoza/google-translate-php": "^5.1",
         "symfony/css-selector": "^6.0"
     },
     "require-dev": {

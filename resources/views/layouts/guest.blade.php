@@ -13,9 +13,7 @@
 
         <!-- Scripts -->
 
-        <link href="/build/assets/app-mw3gNgQE.css" rel="stylesheet">
-{{--        <script src="https://cdn.tailwindcss.com"></script>--}}
-        <script type="text/javascript" src="/build/assets/app-9mbrzSRH.js" defer></script>
+        {{ \App\Utils\Vite::compile() }}
     </head>
     <body class="font-sans text-gray-900 antialiased">
         <div class="min-h-screen flex flex-col sm:justify-center items-center pt-6 sm:pt-0 bg-gray-100">

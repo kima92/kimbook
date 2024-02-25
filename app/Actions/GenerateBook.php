@@ -21,6 +21,7 @@ use Illuminate\Support\Facades\Bus;
 use JsonException;
 use Log;
 use OpenAI\Contracts\ClientContract;
+use Stichoza\GoogleTranslate\GoogleTranslate;
 use Str;
 use Throwable;
 
@@ -77,6 +78,20 @@ class GenerateBook
 
         // Create the book
         $book->status = BookStatuses::GeneratingImages;
+        $lang = $book->additional_data["request"]["language"] ?? "he";
+        $n = new Niqqud();
+        $tr = new GoogleTranslate($lang, 'en');
+        if ($lang != "en") {
+            $bookTranslated = explode("#####", $tr->translate(join("\n#####\n", [$data["title"], $data["description"], $data["tags"]])));
+            $data["title"] = trim($bookTranslated[0]);
+            $data["description"] = trim($bookTranslated[1]);
+            $data["tags"] = trim($bookTranslated[2]);
+            if ($lang == "he") {
+                $data["title"] = $n->handle($data["title"]);
+                $data["description"] = $n->handle($data["description"]);
+                $data["tags"] = $n->handle($data["tags"]);
+            }
+        }
         $book->fill(Arr::only($data, ['title', 'description', 'cover_image', 'tags', 'rating']));
         $book->fill([
             "additional_data->chatGPTUsages" => $this->usages,
@@ -88,6 +103,16 @@ class GenerateBook
         $chaptersData = Arr::get($data, 'chapters', []);
         $images = Collection::make();
         foreach ($chaptersData as $i => $chapterData) {
+            if ($lang != "en") {
+                $chapterTranslated = explode("#####", $tr->translate($chapterData["title"] . "\n#####\n" . $chapterData["content"]));
+                $chapterData["title"] = trim($chapterTranslated[0]);
+                $chapterData["content"] = trim($chapterTranslated[1]);
+                if ($lang == "he") {
+                    $chapterData["title"] = $n->handle($chapterData["title"]);
+                    $chapterData["content"] = $n->handle($chapterData["content"]);
+                }
+            }
+
             $chapter = new Chapter(Arr::only($chapterData, ['number', 'title', 'content']));
             $chapter->number = $i + 1;
             $chapter->book_id = $book->id;
