@@ -2,6 +2,8 @@
 
 namespace App\Providers;
 
+use App\Listeners\TelegramNotificationsListener;
+use App\Utils\Telegram;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
 use Illuminate\Contracts\Queue\Job;
@@ -29,6 +31,10 @@ class EventServiceProvider extends ServiceProvider
         ],
     ];
 
+    protected $subscribe = [
+        TelegramNotificationsListener::class,
+    ];
+
     /**
      * Register any events for your application.
      *
@@ -44,7 +50,10 @@ class EventServiceProvider extends ServiceProvider
         Queue::before(function (JobProcessing $event) {
             $job = $event->job;
             $jobName = JobName::resolve($job->getName(), $job->payload());
-            Log::debug("[Queue][before] Job [{$jobName}] {$job->getJobId()} running on ({$job->getQueue()}), attempt #{$job->attempts()}, queueing timestamp " . (data_get($job->payload(), "queued_at")));
+
+            $msg = "[Queue][before] Job [{$jobName}] {$job->getJobId()} running on ({$job->getQueue()}), attempt #{$job->attempts()}, queueing timestamp " . (data_get($job->payload(), "queued_at"));
+            Log::debug($msg);
+            (new Telegram())->send($msg);
         });
 
         Queue::after(function (JobProcessed $event) {
@@ -54,19 +63,18 @@ class EventServiceProvider extends ServiceProvider
         Queue::failing(function (JobFailed $event) {
             $job = $event->job;
 
-            Log::critical(
-                "[Queue][failing] Job {$job->getJobId()} running on ({$job->getQueue()}) *failed*!\n" .
-                "```Error Message: {$event->exception->getMessage()}" .
-                "\nAdditional Data: \n{$job->getRawBody()}```"
-            );
+            $msg = "[Queue][failing] Job {$job->getJobId()} running on ({$job->getQueue()}) *failed*!\n" .
+                   "```Error Message: {$event->exception->getMessage()}\nAdditional Data: \n{$job->getRawBody()}```";
+            Log::critical($msg);
+            (new Telegram())->send($msg);
         });
 
         Queue::exceptionOccurred(function (JobExceptionOccurred $event) {
             $job = $event->job;
-            $data = [];
 
-            Log::error("[Queue][exceptionOccurred] Job {$job->getJobId()} exception: {$event->exception->getMessage()}" .
-                         (!empty($data) ? "\nAdditional Data: " . urldecode(http_build_query($data, "", ",")) : ""));
+            $msg = "[Queue][exceptionOccurred] Job {$job->getJobId()} exception: {$event->exception->getMessage()}\n{$event->exception->getTraceAsString()}";
+            Log::error($msg);
+            (new Telegram())->send($msg);
 
             if (! $job->isDeleted() && ! $job->isReleased() && ! $job->hasFailed()) {
                 Log::debug("[Queue][exceptionOccurred] Job {$job->getJobId()} released back to the queue");

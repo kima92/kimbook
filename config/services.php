@@ -30,4 +30,9 @@ return [
         'region' => env('AWS_DEFAULT_REGION', 'us-east-1'),
     ],
 
+    'telegram' => [
+        'api_key'         => env('TELEGRAM_API_KEY'),
+        'default_chat_id' => env('TELEGRAM_DEFAULT_CHAT_ID'),
+
+    ]
 ];

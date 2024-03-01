@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Enums\BookStatuses;
+use App\Events\BookCreated;
 use App\Jobs\StartGeneratingBook;
 use App\Models\Book;
 use App\Models\Reading;
@@ -93,6 +94,7 @@ class BookController extends Controller
 
         $book->save();
 
+        event(new BookCreated($book));
         dispatch(new StartGeneratingBook($book));
 
         return view('book-spin-poll', ["id" => $book->uuid]);

@@ -9,6 +9,9 @@
 namespace App\Actions;
 
 use App\Enums\BookStatuses;
+use App\Events\BookCompleted;
+use App\Events\BookFailed;
+use App\Events\BookWritten;
 use App\Jobs\GenerateImage;
 use App\Models\Book;
 use App\Models\Chapter;
@@ -51,8 +54,16 @@ class GenerateBook
 
         $message = $this->generateMessage($book->input);
 
-        $bookRequest = json_decode($this->getJsonFromMessage($message["content"]), true);
-        Log::debug("[GenerateBook][handle] Received bookRequest", $bookRequest);
+        $bookResponse = json_decode($this->getJsonFromMessage($message["content"]), true);
+        Log::debug("[GenerateBook][handle] Received bookResponse", $bookResponse);
+
+        if ($bookResponse["error_message"] ?? null) {
+            Log::debug("[GenerateBook][handle] Got error from provider: {$bookResponse["error_message"]}", $bookResponse);
+            $book->status = BookStatuses::FailedText;
+            $book->fill(["additional_data->error" => $bookResponse]);
+            $book->save();
+            throw new \RuntimeException("GenerateBook: " . json_encode($bookResponse, true));
+        }
 
         for ($i = 2; $i <= 4 && false; $i++) {
             $prompt = config("prompts." . ($i == 4 ? "last_following_chapters" : "following_chapters"));
@@ -60,13 +71,13 @@ class GenerateBook
 
             $message["content"] = $this->getJsonFromMessage($message["content"]);
 
-            $bookRequest["chapters"] = array_merge(
-                $bookRequest["chapters"],
+            $bookResponse["chapters"] = array_merge(
+                $bookResponse["chapters"],
                 json_decode($message["content"], true)["chapters"]
             );
         }
 
-        return $this->fromArray($book, $bookRequest);
+        return $this->fromArray($book, $bookResponse);
     }
 
     public function fromArray(Book $book, array $data): Book
@@ -135,9 +146,11 @@ class GenerateBook
             ->then(function (Batch $batch) use ($book) {
                 $book->status = BookStatuses::Ready;
                 $book->save();
+                event(new BookCompleted($book));
             })->catch(function (Batch $batch, Throwable $e) use ($book) {
                 $book->status = BookStatuses::FailedImages;
                 $book->save();
+                event(new BookFailed($book));
             })
             ->dispatch();
 
@@ -147,6 +160,8 @@ class GenerateBook
             $placeholder->book_id = $book->id;
             $placeholder->save();
         }
+
+        event(new BookWritten($book));
 
         return $book;
     }
