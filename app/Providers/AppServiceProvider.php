@@ -2,11 +2,15 @@
 
 namespace App\Providers;
 
+use App\Models\Book;
+use App\Models\Payment;
 use App\Models\User;
+use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Request;
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Support\Str;
 use OpenAI;
 use OpenAI\Client;
 use OpenAI\Contracts\ClientContract;
@@ -25,6 +29,9 @@ class AppServiceProvider extends ServiceProvider
             if (app()->runningInConsole()) {
                 $method = "Console";
                 $path = join(" ", $_SERVER['argv']);
+                if (Str::contains($path, "artisan queue:work")) {
+                    return;
+                }
             } else {
                 $method = Request::method();
 
@@ -78,6 +85,11 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        //
+        Relation::morphMap([
+            1 => User::class,
+            2 => Book::class,
+            3 => Payment::class,
+        ]);
+
     }
 }

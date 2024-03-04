@@ -254,5 +254,15 @@
     "book_status_FailedText": "לא הצלחתי ליצור את הספר :( נא לנסות שנית",
     "book_status_FailedImages": "לא הצלחתי ליצור את התמונות :( נא לנסות שנית",
     "book_status_Ready": "הספר מוכן!",
-    "My Books": "הספרים שלי"
+    "My Books": "הספרים שלי",
+    "Credits": "קרדיטים",
+    "History": "היסטוריה",
+    "Choose Plan": "בחר",
+    "Choose A Plan": "בחר תוכנית",
+    "Basic": "בסיס",
+    "Standard": "משופר",
+    "Premium": "פרימיום",
+    "Popular": "פופולרי",
+    "Payment Received": "השתלום בוצע בהצלחה!",
+    "Account will be credited shortly": "הקרדיטים יתעדכנו בחשבונך מיד"
 }

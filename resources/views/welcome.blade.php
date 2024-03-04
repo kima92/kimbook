@@ -3,7 +3,8 @@
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-
+        <meta name="description" content="גלו עולם של דמיון עם הפלטפורמה שלנו לסיפורים לילדים! סיפורים משעשעים, מחנכים ואינטראקטיביים מחכים להדליק דמיון ושמחה בלב הילדים. מושלם להורים ומחנכים שרוצים לעורר אהבה לקריאה ולסיפורים. התחילו את ההרפתקה שלכם היום!">
+        <meta name=”robots” content="index, follow">
         <title>{{ config('app.name', 'Laravel') }}</title>
 
         <!-- Fonts -->
@@ -11,8 +12,6 @@
         <link href="https://fonts.googleapis.com/css2?family=Open%20Sans&display=swap" rel="stylesheet">
         <link href="https://fonts.googleapis.com/css2?family=Secular+One&display=swap" rel="stylesheet">
         <link href="/css/book.css" rel="stylesheet">
-
-        <script src="https://unpkg.com/htmx.org@1.9.10" integrity="sha384-D1Kt99CQMDuVetoL1lrYwg5t+9QdHe7NLX/SoJYkXDFfX37iInKRy5xLSi8nO7UC" crossorigin="anonymous"></script>
 
         <script type="text/javascript" src="/js/turnjs4/all.js"></script>
         <script type="text/javascript" src="/js/turnjs4/hash.js"></script>

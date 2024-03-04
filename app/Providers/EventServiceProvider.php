@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Listeners\CreditsListener;
 use App\Listeners\TelegramNotificationsListener;
 use App\Utils\Telegram;
 use Illuminate\Auth\Events\Registered;
@@ -33,6 +34,7 @@ class EventServiceProvider extends ServiceProvider
 
     protected $subscribe = [
         TelegramNotificationsListener::class,
+        CreditsListener::class,
     ];
 
     /**
@@ -45,6 +47,10 @@ class EventServiceProvider extends ServiceProvider
 
         Event::listen(function (JobQueued $event) {
             Log::debug("[Queue][push] Queued job", (array)$event->job);
+        });
+
+        Queue::createPayloadUsing(function ($connectionName, $queue, $payload) {
+            return array_merge($payload, ["queued_at" => now()->format("Y-m-d H:i:s")]);
         });
 
         Queue::before(function (JobProcessing $event) {

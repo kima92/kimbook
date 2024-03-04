@@ -10,6 +10,7 @@ use App\Models\Reading;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Log;
+use Symfony\Component\HttpFoundation\Response;
 
 class BookController extends Controller
 {
@@ -76,6 +77,13 @@ class BookController extends Controller
     {
         Log::debug("[BookController][store] Got new request");
 
+        $balance = \Auth::user()->credits()->sum("amount");
+        if ($balance - config('credits.amounts.book') < 0) {
+            return response()->json([
+                "error_message" => "אין מספיק קרדיטים ליצירת סיפור חדש ({$balance})"
+            ], Response::HTTP_PAYMENT_REQUIRED);
+        }
+
         $request->mergeIfMissing(["isAdultReader" => false]);
 
         // Minimum prompt word count
@@ -88,7 +96,7 @@ class BookController extends Controller
         $book->input = $request->input("plot");
         $book->uuid = \Str::uuid()->toString();
         $book->publication_date = now();
-        $book->additional_data = ["request" => $request->only(["age", "moral", "isAdultReader", "language", "pictures", "art-style"]),];
+        $book->additional_data = ["request" => $request->only(["age", "moral", "isAdultReader", "language", "pictures", "art-style"])];
         $book->tags = "";
         $book->user()->associate($request->user());
 
@@ -97,6 +105,6 @@ class BookController extends Controller
         event(new BookCreated($book));
         dispatch(new StartGeneratingBook($book));
 
-        return view('book-spin-poll', ["id" => $book->uuid]);
+        return response()->json(["uuid" => $book->uuid]);
     }
 }

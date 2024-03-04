@@ -33,6 +33,10 @@ return [
     'telegram' => [
         'api_key'         => env('TELEGRAM_API_KEY'),
         'default_chat_id' => env('TELEGRAM_DEFAULT_CHAT_ID'),
+    ],
 
-    ]
+    'payme' => [
+        'api_key' => env('PAYME_API_KEY'),
+        'url'     => env('PAYME_URL', 'https://live.payme.io'),
+    ],
 ];

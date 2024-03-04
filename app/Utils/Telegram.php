@@ -9,13 +9,14 @@
 namespace App\Utils;
 
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 
 class Telegram
 {
 
     public function send(string $message, ?int $chatId = null): ?array
     {
-        $chatId ??= -config('services.telegram.default_chat_id');
+        $chatId ??= config('services.telegram.default_chat_id');
         $apiKey = config('services.telegram.api_key');
         if (!$chatId || !$apiKey) {
             return null;

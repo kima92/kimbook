@@ -8,7 +8,6 @@
 
         <title>{{ config('app.name', 'Laravel') }}</title>
 
-        <script src="https://unpkg.com/htmx.org@1.9.10" integrity="sha384-D1Kt99CQMDuVetoL1lrYwg5t+9QdHe7NLX/SoJYkXDFfX37iInKRy5xLSi8nO7UC" crossorigin="anonymous"></script>
         <script type="text/javascript" src="/js/turnjs4/all.js"></script>
         <script type="text/javascript" src="/js/turnjs4/hash.js"></script>
         <script type="text/javascript" src="/js/turnjs4/turn.min.js"></script>
@@ -41,7 +40,7 @@
                 @if($bgclass ?? '') class="relative overflow-hidden2 bg-cover bg-no-repeat min-h-screen {{ $bgclass }}"
                 @else class="relative overflow-hidden2 bg-cover bg-no-repeat min-h-screen" style="background-position: 50%; background-image: url('/images/dashboard.webp')"> @endif
                 <div class="absolute top-0 right-0 bottom-0 left-0 h-full w-full bg-[hsla(0,0%,0%,0.25)] bg-fixed">
-                    <div class="flex h-full justify-center">
+                    <div class="flex justify-center">
                         {{ $slot }}
                     </div>
                 </div>
