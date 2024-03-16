@@ -19,6 +19,8 @@ class Niqqud
             return $text;
         }
 
+        \Log::debug("[Niqqud][handle] Starting '{$text}'");
+
         $response = Http::asJson()->post('https://nakdan-5-3.loadbalancer.dicta.org.il/api', [
             'addmorph' => true,
             'keepmetagim' => true,
@@ -26,7 +28,7 @@ class Niqqud
             'nodageshdefmem' => false,
             'patachma' => false,
             'task' => 'nakdan',
-            'data' => $text,
+            'data' => mb_convert_encoding($text, 'UTF-8', 'UTF-8'),
             'useTokenization' => true,
             'genre' => 'modern',
         ]);
@@ -34,7 +36,7 @@ class Niqqud
         return $response->collect("data")->map(fn($part) => str_replace("|", "", $part["nakdan"]["options"][0]["w"] ?? $part["nakdan"]["word"] ?? ""))->join('');
     }
 
-    public function is(string$string): bool
+    public function is(string $string): bool
     {
         // Regular expression to match Hebrew letters and Niqqud
         return preg_match('/[\x{0591}-\x{05C7}]/u', $string);

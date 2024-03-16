@@ -1,22 +1,17 @@
-{{--<x-app-layout :bgclass="'bg-gradient-to-b from-slate-900 to-slate-700'">--}}
 <x-app-layout>
-    <div class="grid lg:grid-cols-3 lg:gap-y-8 gap-y-2 gap-x-16 mt-24 w-11/12 mx-auto">
-        @foreach(Auth::user()->books->filter(fn(\App\Models\Book $book) => $book->chapters->first()?->images?->first()?->image_url)->reverse() as $book)
-            <a href="/books/{{$book->uuid}}">
-                <div class="p-4 bg-[hsla(0,0%,0%,0.70)] text-black rounded-3xl transform transition duration-500 hover:scale-110">
-                    <div class="overflow-hidden bg-contain bg-center bg-no-repeat lg:p-30 hidden lg:block"
-                         style="background-image: url('{{$book->chapters->first()->images->first()->image_url}}');height: 450px;">
-                        <h3 class="text-center bg-[hsla(0,0%,100%,0.70)] leading-6 mx-auto content" style="direction: rtl;">
-                            {{ $book->title }}
-                        </h3>
-                    </div>
-
-                    <div class="block lg:hidden">
-                        <div><h3 class="text-center bg-[hsla(0,0%,100%,0.70)] leading-6" style="direction: rtl; ">{{ $book->title }}</h3></div>
-                        <img src="{{$book->chapters->first()->images->first()->image_url}}" />
-                    </div>
-                </div>
-            </a>
-        @endforeach
+    <div class="flex flex-col">
+        @if(Auth::user()->books->isEmpty())
+        <div class="p-6 mt-10 text-center text-white md:px-12 bg-[hsla(0,0%,0%,0.70)] rounded-3xl">
+            <h1 class="mt-2 mb-6 text-3xl font-bold tracking-tight md:text-2xl xl:text-3xl">
+                {{ __("No books created yet") }}
+            </h1>
+            <form method="get" action="/dashboard">
+                <button id="submit" type="submit" class="rounded border-2 border-white px-[46px] pt-[14px] pb-[12px] text-sm font-medium uppercase leading-normal text-white transition duration-150 ease-in-out hover:border-green-200 hover:bg-green-200 hover:bg-opacity-10 hover:text-green-200 focus:border-green-200 focus:text-green-200 focus:outline-none focus:ring-0 active:border-green-200 active:text-green-200">
+                    צור הרפתקה חדשה
+                </button>
+            </form>
+        </div>
+        @endif
+        <x-books-grid :books="Auth::user()->books"/>
     </div>
 </x-app-layout>

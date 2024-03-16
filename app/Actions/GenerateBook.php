@@ -8,6 +8,8 @@
 
 namespace App\Actions;
 
+use App\AI\Chat\ChatConversationInterface;
+use App\AI\Prompts\RawPrompt;
 use App\Enums\BookStatuses;
 use App\Events\BookCompleted;
 use App\Events\BookFailed;
@@ -23,38 +25,29 @@ use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Bus;
 use JsonException;
 use Log;
-use OpenAI\Contracts\ClientContract;
 use Stichoza\GoogleTranslate\GoogleTranslate;
 use Str;
 use Throwable;
 
 class GenerateBook
 {
-
-    const MODEL_GPT_4_0125_PREVIEW = 'gpt-4-0125-preview';
-    const MODEL_GPT_3_5_TURBO = 'gpt-3.5-turbo';
-
-    protected array $messages = [];
-    protected array $usages = [];
-
-    protected string $currentModel = self::MODEL_GPT_4_0125_PREVIEW;
-    protected static array $aiModels = [
-        self::MODEL_GPT_4_0125_PREVIEW => ["costsPer1K" => ["prompt" => 0.0100, "completion" => 0.0300]],
-        self::MODEL_GPT_3_5_TURBO      => ["costsPer1K" => ["prompt" => 0.0005, "completion" => 0.0015]],
-    ];
-
     public function handle(Book $book): Book
     {
+        $conv = app(ChatConversationInterface::class);
+
         $book->status = BookStatuses::GeneratingText;
+        $book->forceFill(["additional_data->chatModel" => $conv->getModel()]);
         $book->save();
 
-        $this->messages = [
-            ['role' => 'system', 'content' => $this->getSystemMessage($book)],
-        ];
+        $conv->addSystemMessage(new RawPrompt($this->getSystemMessage($book, $conv)));
+        $message = $conv->send(new RawPrompt($book->input));
 
-        $message = $this->generateMessage($book->input);
+        try {
+            $bookResponse = json_decode($this->getJsonFromMessage($message), true, flags: JSON_THROW_ON_ERROR);
+        } catch (JsonException) {
+            throw new \RuntimeException("Malformed response from openAI");
+        }
 
-        $bookResponse = json_decode($this->getJsonFromMessage($message["content"]), true);
         Log::debug("[GenerateBook][handle] Received bookResponse", $bookResponse);
 
         if ($bookResponse["error_message"] ?? null) {
@@ -67,22 +60,27 @@ class GenerateBook
 
         for ($i = 2; $i <= 4 && false; $i++) {
             $prompt = config("prompts." . ($i == 4 ? "last_following_chapters" : "following_chapters"));
-            $message = $this->generateMessage($prompt);
+            $message = $conv->send(new RawPrompt($prompt));
 
-            $message["content"] = $this->getJsonFromMessage($message["content"]);
+            try {
+                $additionalResponse = json_decode($this->getJsonFromMessage($message), true, flags: JSON_THROW_ON_ERROR);
+            } catch (JsonException) {
+                throw new \RuntimeException("Malformed response from openAI");
+            }
 
             $bookResponse["chapters"] = array_merge(
                 $bookResponse["chapters"],
-                json_decode($message["content"], true)["chapters"]
+                $additionalResponse["chapters"]
             );
         }
 
-        return $this->fromArray($book, $bookResponse);
+        return $this->fromArray($book, $bookResponse, $conv);
     }
 
-    public function fromArray(Book $book, array $data): Book
+    public function fromArray(Book $book, array $data, ChatConversationInterface $conv): Book
     {
-        \Log::debug("[fromArray] Got Request: " . json_encode($data, JSON_UNESCAPED_UNICODE));
+        \Log::debug("[GenerateBook][fromArray] Got Request: " . json_encode($data, JSON_UNESCAPED_UNICODE));
+        $data = $this->trimArrayKeys($data);
 
         // Create or find the author
         $data['tags'] = implode(",", $data['tags']);
@@ -93,7 +91,10 @@ class GenerateBook
         $n = new Niqqud();
         $tr = new GoogleTranslate($lang, 'en');
         if ($lang != "en") {
-            $bookTranslated = explode("#####", $tr->translate(join("\n#####\n", [$data["title"], $data["description"], $data["tags"]])));
+            $bookTranslated = [$data["title"], $data["description"], $data["tags"]];
+            if (preg_match('/[\x{0590}-\x{05FF}]/u', $data["description"]) === 0) {
+                $bookTranslated = explode("#####", $tr->translate(join("\n#####\n", $bookTranslated)));
+            }
             $data["title"] = trim($bookTranslated[0]);
             $data["description"] = trim($bookTranslated[1]);
             $data["tags"] = trim($bookTranslated[2]);
@@ -105,8 +106,8 @@ class GenerateBook
         }
         $book->fill(Arr::only($data, ['title', 'description', 'cover_image', 'tags', 'rating']));
         $book->fill([
-            "additional_data->chatGPTUsages" => $this->usages,
-            "additional_data->costs_usd" => collect($this->usages)->sum(fn($usage) => $usage['prompt_cost'] + $usage['completion_cost']),
+            "additional_data->chatGPTUsages" => $conv->getUsages(),
+            "additional_data->costs_usd" => $conv->getUsages()->sum(fn($usage) => $usage['prompt_cost'] + $usage['completion_cost']),
         ]);
         $book->save();
 
@@ -114,8 +115,16 @@ class GenerateBook
         $chaptersData = Arr::get($data, 'chapters', []);
         $images = Collection::make();
         foreach ($chaptersData as $i => $chapterData) {
+            Log::debug("[GenerateBook][fromArray] Starting With chapter " . ($i + 1));
+
             if ($lang != "en") {
-                $chapterTranslated = explode("#####", $tr->translate($chapterData["title"] . "\n#####\n" . $chapterData["content"]));
+                Log::debug("[GenerateBook][fromArray] Got [{$chapterData["title"]}] {$chapterData["content"]}");
+                $chapterTranslated = [$chapterData["title"], $chapterData["content"]];
+
+                if (preg_match('/[\x{0590}-\x{05FF}]/u', $chapterData["content"]) === 0) {
+                    $chapterTranslated = explode("#####", $tr->translate(join("\n#####\n", $chapterTranslated)));
+                    Log::debug("[GenerateBook][fromArray] Translation response [{$chapterTranslated[0]}] {$chapterTranslated[1]}");
+                }
                 $chapterData["title"] = trim($chapterTranslated[0]);
                 $chapterData["content"] = trim($chapterTranslated[1]);
                 if ($lang == "he") {
@@ -166,55 +175,6 @@ class GenerateBook
         return $book;
     }
 
-    /**
-     * @param string $content
-     *
-     * @return array
-     * @throws \Exception
-     */
-    protected function generateMessage(string $content): array
-    {
-        Log::info("[GenerateBook][generateMessage] generateMessage: {$content}");
-
-        $this->messages[] = ['role' => 'user', 'content' => $content];
-
-        if (Str::contains($content, "fake", true)) {
-            Log::info("[GenerateBook][generateMessage] Fake!!!!");
-            $this->usages[] = $this->enrichCosts(['prompt_tokens' => 0, 'completion_tokens' => 0, 'total_tokens' => 0]);
-            sleep(2);
-
-            return $this->messages[] = ['role' => 'assistant', 'content' => $this->getPrompt()];
-        }
-
-        $result = retry(1, function () {
-            $result = app(ClientContract::class)->chat()->create([
-                'model'    => $this->currentModel,
-//            'model' => 'gpt-4',
-                'messages' => $this->messages,
-            ]);
-
-            Log::debug("[GenerateBook][generateMessage] OpenAI response", $result->toArray());
-
-            $this->usages[] = $this->enrichCosts($result->usage->toArray());
-
-            Log::debug("[GenerateBook][generateMessage] OpenAI message", $result->choices[0]->message->toArray());
-
-            try {
-                json_decode($this->getJsonFromMessage($result->choices[0]->message->content), true, 512, JSON_THROW_ON_ERROR);
-                $isJson = true;
-            } catch (JsonException) {
-                $isJson = false;
-            }
-
-            if (!$isJson) {
-                throw new \RuntimeException("Malformed response from openAI");
-            }
-
-            return $result;
-        });
-
-        return $this->messages[] = $result['choices'][0]["message"];
-    }
 
     /**
      * @param $content
@@ -267,22 +227,7 @@ class GenerateBook
 }';
     }
 
-    /**
-     * @param $usage
-     *
-     * @return float[]
-     */
-    protected function enrichCosts($usage): array
-    {
-        $costs = self::$aiModels[$this->currentModel]['costsPer1K'];
-
-        $usage['prompt_cost']     = ($costs['prompt'] * ($usage['prompt_tokens'] / 1000));
-        $usage['completion_cost'] = ($costs['completion'] * ($usage['completion_tokens'] / 1000));
-
-        return $usage;
-    }
-
-    protected function getSystemMessage(Book $book): string
+    protected function getSystemMessage(Book $book, ChatConversationInterface $conv): string
     {
         $request = $book->additional_data["request"];
         $chapters = match ((int)$request["isAdultReader"] . "|" . $request["age"]) {
@@ -295,7 +240,10 @@ class GenerateBook
         };
 
         $replacements = [
-            ":Language:"             => "Hebrew with Punctuation",
+            ":Language:"             => match ($conv->isSupportedLanguage($request["language"]) ? $request["language"] : "en") {
+                "en" => "English",
+                "he" => "Hebrew",
+            },
             ":MainMoral:"            => $request["moral"],
             ":ArtStyle:"             => match ($request["art-style"] ?? null) {
                 "random", null  => Arr::random(["Walt Disney", "Anime", "Dreamworks", "Pixar"]),
@@ -307,5 +255,15 @@ class GenerateBook
         ];
 
         return str_replace(array_keys($replacements), array_values($replacements), config("prompts.generate-tale"));
+    }
+
+    private function trimArrayKeys(array $input): array
+    {
+        $result = [];
+        foreach ($input as $key => $value) {
+            $result[trim($key)] = is_array($value) ? $this->trimArrayKeys($value) : $value;
+        }
+
+        return $result;
     }
 }

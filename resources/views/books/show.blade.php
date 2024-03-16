@@ -40,7 +40,7 @@
                 </div>
             </div>
 
-            <div class="mx-auto2 p-4 lg:p-6 bg-[hsla(0,0%,0%,0.70)] rounded-3xl text-right w-full mt-2">
+            <div class="p-4 lg:p-6 bg-[hsla(0,0%,0%,0.70)] rounded-3xl text-right w-full mt-2">
 {{--            <div class="mx-auto2 p-6 bg-[hsla(0,0%,0%,0.70)] rounded-3xl text-right" style="width: 1040px">--}}
                 @if($canView)
                     <x-book :pages="$book->toBookArray()"></x-book>
@@ -60,7 +60,57 @@
             </div>
         </div>
 
-        <div class="mt-12">
-        </div>
+        @if($book->user_id == Auth::id())
+            <div class="p-4 lg:p-6 bg-[hsla(0,0%,0%,0.70)] rounded-3xl text-right w-full mt-2 flex flex-col text-white">
+                <h1 class="text-2xl leading-6 mb-4">משוב</h1>
+                <span>נשמח לקבל משוב על הספר ולשפר את החוויה שלכם!</span>
+                <textarea required minlength="5" id="review-content" cols="4" maxlength="500" class="mt-4 h-28 rounded border-2 bg-[hsla(0,0%,0%,0.70)] border-white font-medium text-white focus:border-white">{{$book->additional_data["userReview"] ?? ""}}</textarea>
+                <button id="review-submit" onclick="submitReview()" class="mt-4 rounded border-2 border-white px-[46px] pt-[14px] pb-[12px] text-sm font-medium uppercase leading-normal text-white transition duration-150 ease-in-out hover:border-green-200 hover:bg-green-200 hover:bg-opacity-10 hover:text-green-200 focus:border-green-200 focus:text-green-200 focus:outline-none focus:ring-0 active:border-green-200 active:text-green-200">
+                    {{ __("Submit") }}
+                </button>
+                <span id="review-message" class="hidden">תודה רבה!</span>
+            </div>
+
+            <script>
+
+                function submitReview() {
+                    document.getElementById('review-submit').disabled = true;
+                    document.getElementById('review-message').classList.add("hidden");
+
+                    // Create an object to populate with the form data
+                    const data = {
+                        review: document.getElementById('review-content').value
+                    };
+                    // Collect form data
+
+                    // Use fetch to send the data as a POST request
+                    fetch('/books/{{$book->uuid}}', {
+                        method: 'PUT', // Specify the request method
+                        headers: {
+                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+                            'Content-Type': 'application/json', // Specify the content type
+                        },
+                        body: JSON.stringify(data), // Convert the JavaScript object to a JSON string
+                    })
+                        .then(response => {
+                            if (!response.ok) { // Checks if the response status code is outside the 200-299 range
+                                return response.json().then(errorData => {
+                                    // Handle HTTP error with custom error message
+                                    throw new Error(errorData.error_message || 'Unknown error');
+                                });
+                            }
+                            return response.json(); // Parse the JSON response
+                        })
+                        .then(data => {
+                            document.getElementById('review-message').classList.remove("hidden");
+                        })
+                        .catch((error) => {
+                            console.error('Error:', error); // Handle errors
+                            document.getElementById('review-submit').disabled = false;
+                        });
+                }
+
+            </script>
+        @endif
     </div>
 </x-app-layout>

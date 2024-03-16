@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Enums\BookStatuses;
 use App\Events\BookCreated;
+use App\Events\BookReviewUpdated;
 use App\Jobs\StartGeneratingBook;
 use App\Models\Book;
 use App\Models\Reading;
@@ -43,6 +44,21 @@ class BookController extends Controller
         }
 
         return view('books.show', ['book' => $book, "canView" => $canView]);
+    }
+
+    public function update(Request $request, string $uuid)
+    {
+        $book = Book::query()
+            ->with('chapters.images', 'reactions')
+            ->where('uuid', $uuid)
+            ->firstOrFail();
+
+        $book->forceFill(["additional_data->userReview" => $request->json("review")]);
+        $book->save();
+
+        event(new BookReviewUpdated($book));
+
+        return \response()->json();
     }
 
     public function next(Request $request, string $uuid)

@@ -96,7 +96,10 @@ class Book extends Model
 
     protected function getStatusMessageAttribute(): string
     {
-        return $this->status->translated();
+        return $this->status->translated() . match ($this->status) {
+            BookStatuses::Initial => " " . __("Generally it takes a minute or two"),
+            default => ""
+        };
     }
 
     protected function getCostsUsdAttribute(): ?string

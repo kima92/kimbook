@@ -35,6 +35,18 @@ return [
         'default_chat_id' => env('TELEGRAM_DEFAULT_CHAT_ID'),
     ],
 
+    'anthropic' => [
+        'api_key'         => env('ANTHROPIC_API_KEY'),
+    ],
+
+    'grok' => [
+        'api_key'         => env('GROK_API_KEY'),
+    ],
+
+    'chatProvider' => [
+        'class'         => env('AI_CHAT_PROVIDER', "gpt"),
+    ],
+
     'payme' => [
         'api_key' => env('PAYME_API_KEY'),
         'url'     => env('PAYME_URL', 'https://live.payme.io'),

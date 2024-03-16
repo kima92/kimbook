@@ -21,6 +21,7 @@ Route::get('/', function () {
     return view('welcome');
 });
 Route::get('/books/{uuid}', [BookController::class, "show"]);
+Route::put('/books/{uuid}', [BookController::class, "update"]);
 Route::get('/books/{uuid}/slim', [BookController::class, "showSlim"]);
 Route::get('/books/{uuid}/next', [BookController::class, "next"])->middleware(['auth', 'verified']);
 

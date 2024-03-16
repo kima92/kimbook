@@ -46,7 +46,7 @@ use Illuminate\Notifications\Notifiable;
  * @method static \Illuminate\Database\Eloquent\Builder|User whereUpdatedAt($value)
  * @mixin \Eloquent
  */
-class User extends Authenticatable// implements FilamentUser
+class User extends Authenticatable implements MustVerifyEmail// FilamentUser
 {
 
     use HasFactory, Notifiable;

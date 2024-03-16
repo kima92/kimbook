@@ -2,10 +2,14 @@
 
 namespace App\Providers;
 
+use App\AI\Chat\ChatConversationInterface;
+use App\AI\Chat\ChatGPTConversation;
+use App\AI\Chat\ClaudeConversation;
 use App\Models\Book;
 use App\Models\Payment;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Relations\Relation;
+use Illuminate\Foundation\Application;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Request;
@@ -76,6 +80,21 @@ class AppServiceProvider extends ServiceProvider
 
         $this->app->alias(ClientContract::class, 'openai');
         $this->app->alias(ClientContract::class, Client::class);
+        $this->app->singleton(\App\AI\Claude\Client::class, function (Application $app) {
+            throw_unless($apiKey = config("services.anthropic.api_key"), "missing anthropic API Key");
+
+            return new \App\AI\Claude\Client($apiKey);
+        });
+
+        $this->app->singleton(ChatConversationInterface::class, function (Application $app) {
+            $name = $app['config']->get("services.chatProvider.class");
+
+            return $app->make(match ($name) {
+                "claude" => ClaudeConversation::class,
+                "gpt"    => ChatGPTConversation::class,
+                default  => throw new \RuntimeException("Unknown provider {$name}")
+            });
+        });
     }
 
     /**
