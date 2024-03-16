@@ -1,6 +1,5 @@
 <x-app-layout>
-    <div class="flex flex-col">
-        @if(Auth::user()->books->isEmpty())
+    @if(Auth::user()->books->isEmpty())
         <div class="p-6 mt-10 text-center text-white md:px-12 bg-[hsla(0,0%,0%,0.70)] rounded-3xl">
             <h1 class="mt-2 mb-6 text-3xl font-bold tracking-tight md:text-2xl xl:text-3xl">
                 {{ __("No books created yet") }}
@@ -11,7 +10,7 @@
                 </button>
             </form>
         </div>
-        @endif
+    @else
         <x-books-grid :books="Auth::user()->books"/>
-    </div>
+    @endif
 </x-app-layout>
