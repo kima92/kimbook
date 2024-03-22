@@ -1,4 +1,4 @@
-@props(['pages', 'height' => 500, 'textColor' => 'white'])
+@props(['pages', 'height' => 500])
 <div id="{{ $id = Str::random(8) }}" {{ $attributes->merge(['class' => 'sample-flipbook hidden lg:block']) }}>
     @foreach ((array) $pages as $i => $page)
         <div @class(['hard' => $page["isCover"] ?? false])>
@@ -7,7 +7,7 @@
                                                                                                           background-image: url('{{$page["image"]}}');
                                                                                                           ">@endif
                 @if($page["title"] ?? null)<div><h3 class="text-center text-5xl leading-tight" style="font-family: 'Secular One', sans-serif;direction: rtl; -webkit-text-stroke-color: #FFFFFF; -webkit-text-stroke-width: 1px">{{ $page["title"] }}</h3></div>@endif
-                <div class="text-2xl h-full flex flex-col gap-2 justify-center justify-items-center " style="direction: rtl; padding: 30px 30px 0 30px; height: 460px">
+                <div class="text-2xl h-full flex flex-col gap-2 justify-center justify-items-center text-black" style="direction: rtl; padding: 30px 30px 0 30px; height: 460px">
                     @foreach(explode("\n", $page["content"] ?? "") as $p)
                         <p @if($page["image"] ?? null)style="-webkit-text-stroke-color: #FFFFFF; -webkit-text-stroke-width: thin" class="text-4xl" @endif>{{ $p }}</p>
                     @endforeach
@@ -99,19 +99,19 @@
                 @if($page["image"] ?? null)<img src="{{$page["image"]}}" />@endif
                 <div class="my-4" style="direction: rtl">
                     @foreach(explode("\n", $page["content"] ?? "") as $p)
-                        <p class="mb-2 text-{{ $textColor }}">{{ $p }}</p>
+                        <p class="mb-2">{{ $p }}</p>
                     @endforeach
                 </div>
             @if($page["isCover"] ?? null || ($i % 2 === 0))</div>@endif
         @endforeach
         </div>
         <div class="flex gap-x-4 justify-center">
-            <button class="prev text-{{ $textColor }} text-2xl"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+            <button class="prev text-2xl"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
                     <path stroke-linecap="round" stroke-linejoin="round" d="m12.75 15 3-3m0 0-3-3m3 3h-7.5M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
                 </svg>
             </button>
             <div class="dots"></div>
-            <button class="next text-{{ $textColor }} text-2xl"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+            <button class="next text-2xl"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
                     <path stroke-linecap="round" stroke-linejoin="round" d="m11.25 9-3 3m0 0 3 3m-3-3h7.5M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
                 </svg></button>
         </div>

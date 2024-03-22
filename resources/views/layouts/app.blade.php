@@ -28,7 +28,7 @@
 
             <!-- Page Heading -->
             @if (isset($header))
-                <header class="bg-white shadow">
+                <header class="bg-white dark:bg-black shadow">
                     <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
                         {{ $header }}
                     </div>
@@ -36,14 +36,18 @@
             @endif
 
             <!-- Page Content -->
-            <main
-                @if($bgclass ?? '') class="relative overflow-hidden2 bg-cover bg-no-repeat min-h-screen {{ $bgclass }}"
-                @else class="relative overflow-hidden2 bg-cover bg-no-repeat min-h-screen" style="background-position: 50%; background-image: url('/images/dashboard.webp')"> @endif
-                <div class="absolute top-0 right-0 bottom-0 left-0 h-full w-full bg-[hsla(0,0%,0%,0.25)] bg-fixed">
-                    <div class="flex justify-center">
-                        {{ $slot }}
+            <main>
+                <section>
+                    <!-- Jumbotron -->
+                    @php($bgPaths = Arr::random(['a3113bb6-6047-4b10-9d1c-ac31c490f237.webp', 'bg2.png', 'dogs.webp', 'cute.webp'], 2))
+                    <div class="relative bg-fixed bg-cover bg-no-repeat lg:h-screen" style="min-height: 100%;background-position: 50%; background-image: url('/images/{{ $bgPaths[0] }}');">
+                        <div class="min-h-full w-full bg-[hsla(0,100%,100%,0.85)] dark:bg-[hsla(0,0%,0%,0.90)]">
+                            <div class="flex justify-center">
+                                {{ $slot }}
+                            </div>
+                        </div>
                     </div>
-                </div>
+                </section>
             </main>
         </div>
         <!-- Google tag (gtag.js) -->
@@ -55,5 +59,16 @@
 
             gtag('config', 'G-RKGVRPNJWV');
         </script>
+        <script>
+            nagishli_config = {
+                // Plugin language, you can choose en for English, and he for Hebrew
+                language: "{{ app()->getLocale() }}",
+                // Currently, you can choose from Blue, Red, Green, Purple, Pink, Yellow, Gray, Orange, Brown, Turquoise and Black
+                color: "blue"
+            };
+        </script>
+
+        <script src="/js/nagishli_v3_beta/nagishli_beta.js?v=3.0b" charset="utf-8" defer></script>
+        @stack('scripts')
     </body>
 </html>
