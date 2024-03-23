@@ -119,7 +119,7 @@ class Book extends Model
             $pages[] = ['content' => $chapter->content, 'pageNum' => $i++];
         }
 
-        $pages[] = ['isCover' => true, 'image' => $this->chapters->first()->images->first()->image_url, 'title' => "הסוף :)"];
+        $pages[] = ['isCover' => true, 'image' => $this->chapters->first()->images->first()->image_url, 'title' => "הסוף..."];
 
         return $pages;
     }

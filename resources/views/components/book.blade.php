@@ -77,13 +77,7 @@
                 cursor: pointer;
                 height: 10px;
                 width: 10px;
-                background-color: #242421;
                 transition: background-color 0.2s ease;
-
-                &.active,
-                &:hover {
-                    background-color: #ffffe6;
-                }
             }
         }
     }
@@ -95,9 +89,9 @@
         <div class="carousel">
         @foreach ((array) $pages as $i => $page)
             @if($page["isCover"] ?? null || ($i % 2 === 1))<div @class(["item", "active" => $i == 0])>@endif
-                @if($page["title"] ?? null)<div><h3 class="text-center bg-[hsla(0,0%,100%,0.70)] leading-6" style="direction: rtl; ">{{ $page["title"] }}</h3></div>@endif
+                @if($page["title"] ?? null)<div><h3 class="text-2xl text-center bg-[hsla(0,0%,100%,0.70)] leading-6 mx-auto content z-20 p-2 rounded-3xl" style="direction: rtl;">{{ $page["title"] }}</h3></div>@endif
                 @if($page["image"] ?? null)<img src="{{$page["image"]}}" />@endif
-                <div class="my-4" style="direction: rtl">
+                <div class="my-4 text-black dark:text-white" style="direction: rtl">
                     @foreach(explode("\n", $page["content"] ?? "") as $p)
                         <p class="mb-2">{{ $p }}</p>
                     @endforeach
@@ -106,12 +100,12 @@
         @endforeach
         </div>
         <div class="flex gap-x-4 justify-center">
-            <button class="prev text-2xl"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+            <button class="prev text-2xl"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6 dark:text-white">
                     <path stroke-linecap="round" stroke-linejoin="round" d="m12.75 15 3-3m0 0-3-3m3 3h-7.5M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
                 </svg>
             </button>
             <div class="dots"></div>
-            <button class="next text-2xl"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+            <button class="next text-2xl"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6 dark:text-white">
                     <path stroke-linecap="round" stroke-linejoin="round" d="m11.25 9-3 3m0 0 3 3m-3-3h7.5M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
                 </svg></button>
         </div>
@@ -127,8 +121,8 @@
         // Insert dots into the DOM
         items.forEach((_, index) => {
             let dot = document.createElement("span");
-            dot.classList.add("dot");
-            if (index === 0) dot.classList.add("active");
+            dot.classList.add("dot", "bg-gray-500", "dark:bg-gray-300");
+            if (index === 0) dot.classList.add("active", "bg-purple-500", "dark:bg-purple-500");
             dot.dataset.index = index;
             dotsContainer.appendChild(dot);
         });
@@ -139,10 +133,10 @@
         function showItem(index) {
             items.forEach((item, idx) => {
                 item.classList.remove("active");
-                dots[idx].classList.remove("active");
+                dots[idx].classList.remove("active", "bg-purple-500", "dark:bg-purple-500");
                 if (idx === index) {
                     item.classList.add("active");
-                    dots[idx].classList.add("active");
+                    dots[idx].classList.add("active", "bg-purple-500", "dark:bg-purple-500");
                 }
             });
         }
