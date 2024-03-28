@@ -24,6 +24,7 @@
                     {{ $book->readings()->count() }}
                 </div>
                 <p class="mt-3">{{ $book->description }}</p>
+                <p class="mt-3 text-gray-500">{{ $book->input }}</p>
                 <p class="mt-3">{{ $book->publication_date->format("d/m/Y") }}</p>
                 <div class="flex flex-wrap gap-2 mt-3">
                     @php($colors = ["cyan", "yellow", "rose", "blue", "green", "orange", "pink"])

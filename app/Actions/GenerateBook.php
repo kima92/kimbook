@@ -142,7 +142,7 @@ class GenerateBook
             $image = new Image();
             $image->book_id = $book->id;
             $image->chapter_id = $chapter->id;
-            $image->prompt = $chapterData["illustrator_instructions_prompt"] ?? null;
+            $image->prompt = rtrim($chapterData["illustrator_instructions_prompt"] ?? null , ".") . ". {$data["art"]}";
             $image->save();
 
             $images->add($image);

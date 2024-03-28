@@ -21,7 +21,7 @@ class CreateImagesTable extends Migration
             $table->foreign('chapter_id')->references('id')->on('chapters');
             $table->string('image_url', 1000)->nullable();
             $table->text('caption')->nullable();
-            $table->string('prompt')->nullable();
+            $table->text('prompt')->nullable();
             $table->timestamps();
 
             $table->index(['book_id', 'chapter_id']);

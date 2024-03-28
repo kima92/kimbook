@@ -9,22 +9,22 @@
             @csrf
             <div class="mt-3 flex flex-col lg:flex-row lg:justify-center lg:gap-3 gap-y-1">
                 <select name="age" class="bg-[hsla(0,0%,100%,0.50)] dark:bg-[hsla(0,0%,100%,0.05)] dark:border-2 rounded dark:border-white focus:border-white w-full lg:w-1/6">
-                    <option disabled selected>-בחר גיל-</option>
-                    <option>3-5</option>
-                    <option>6-8</option>
-                    <option>9-12</option>
-                    <option disabled>12+</option>
+                    <option class="dark:bg-black" disabled selected>-בחר גיל-</option>
+                    <option class="dark:bg-black">3-5</option>
+                    <option class="dark:bg-black">6-8</option>
+                    <option class="dark:bg-black">9-12</option>
+                    <option class="dark:bg-black" disabled>12+</option>
                 </select>
 
 {{--                <input type="text" name="subject1" class="bg-black border-2 rounded border-white focus:border-white lg:w-1/5">--}}
 {{--                <input type="text" name="subject2" class="bg-black border-2 rounded border-white focus:border-white lg:w-1/5">--}}
                 <select name="moral" class="bg-[hsla(0,0%,100%,0.50)] dark:bg-[hsla(0,0%,100%,0.05)] dark:border-2 rounded dark:border-white focus:border-white w-full lg:w-1/5">
-                    <option disabled selected>-בחר ערך חינוכי-</option>
-                    <option value="parent-respact">כיבוד הורים</option>
-                    <option value="friendship">חברות</option>
-                    <option value="helping-others">עזרה לזולת</option>
-                    <option value="random">אקראי</option>
-                    <option value="none">ללא</option>
+                    <option class="dark:bg-black" disabled selected>-בחר ערך חינוכי-</option>
+                    <option class="dark:bg-black" value="parent-respact">כיבוד הורים</option>
+                    <option class="dark:bg-black" value="friendship">חברות</option>
+                    <option class="dark:bg-black" value="helping-others">עזרה לזולת</option>
+                    <option class="dark:bg-black" value="random">אקראי</option>
+                    <option class="dark:bg-black" value="none">ללא</option>
                 </select>
 
                 <div class="w-full lg:w-1/6 text-right lg:text-center flex items-center justify-center">
@@ -35,18 +35,18 @@
                 </div>
 
                 <select name="language" class="bg-[hsla(0,0%,100%,0.50)] dark:bg-[hsla(0,0%,100%,0.05)] dark:border-2 rounded dark:border-white focus:border-white w-full lg:w-1/6">
-                    <option disabled>-בחר שפה-</option>
-                    <option value="he" selected>עברית</option>
-                    <option value="en">אנגלית</option>
+                    <option class="dark:bg-black" disabled>-בחר שפה-</option>
+                    <option class="dark:bg-black" value="he" selected>עברית</option>
+                    <option class="dark:bg-black" value="en">אנגלית</option>
                 </select>
 
                 <select name="art-style" class="bg-[hsla(0,0%,100%,0.50)] dark:bg-[hsla(0,0%,100%,0.05)] dark:border-2 rounded dark:border-white focus:border-white w-full lg:w-1/6">
-                    <option disabled selected>-עיצוב-</option>
-                    <option value="Pixar">Pixar</option>
-                    <option value="Walt Disney">וולט דיסני</option>
-                    <option value="Anime">אנימה</option>
-                    <option value="asked-in-text">אציין בעצמי</option>
-                    <option value="random">אקראי</option>
+                    <option class="dark:bg-black" disabled selected>-עיצוב-</option>
+                    <option class="dark:bg-black" value="Pixar">Pixar</option>
+                    <option class="dark:bg-black" value="Walt Disney">וולט דיסני</option>
+                    <option class="dark:bg-black" value="Anime">אנימה</option>
+                    <option class="dark:bg-black" value="asked-in-text">אציין בעצמי</option>
+                    <option class="dark:bg-black" value="random">אקראי</option>
                 </select>
 
 {{--                <div class="w-full lg:w-1/6 text-right lg:text-center">--}}
