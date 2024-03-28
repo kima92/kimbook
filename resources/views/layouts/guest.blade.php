@@ -14,7 +14,7 @@
         <!-- Scripts -->
 
         {{ \App\Utils\Vite::compile() }}
-        {!! RecaptchaV3::initJs() !!}
+{{--        {!! RecaptchaV3::initJs() !!}--}}
           </head>
     <body class="font-sans text-gray-900 antialiased">
     <section>

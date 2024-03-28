@@ -45,6 +45,7 @@
                                 name="password_confirmation" required />
             </div>
 
+{{--            {!! RecaptchaV3::field('register') !!}--}}
             <div class="flex items-center justify-end mt-4">
                 <a class="underline text-sm text-gray-600 dark:text-white hover:text-gray-900 dark:hover:text-gray-300" href="{{ route('login') }}">
                     {{ __('Already registered?') }}
