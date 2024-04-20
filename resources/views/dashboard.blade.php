@@ -8,6 +8,7 @@
             {{ __("Dive into a world of imagination where you and your child collaborate together to create tales that are uniquely yours, complete with beautiful artwork.") }}
             @csrf
             <div class="mt-3 flex flex-col lg:flex-row lg:justify-center lg:gap-3 gap-y-1">
+                {{--Age--}}
                 <select name="age" class="bg-[hsla(0,0%,100%,0.50)] dark:bg-[hsla(0,0%,100%,0.05)] dark:border-2 rounded dark:border-white focus:border-white w-full lg:w-1/6">
                     <option class="dark:bg-black" disabled selected>-בחר גיל-</option>
                     <option class="dark:bg-black">3-5</option>
@@ -16,9 +17,8 @@
                     <option class="dark:bg-black" disabled>12+</option>
                 </select>
 
-{{--                <input type="text" name="subject1" class="bg-black border-2 rounded border-white focus:border-white lg:w-1/5">--}}
-{{--                <input type="text" name="subject2" class="bg-black border-2 rounded border-white focus:border-white lg:w-1/5">--}}
-                <select name="moral" class="bg-[hsla(0,0%,100%,0.50)] dark:bg-[hsla(0,0%,100%,0.05)] dark:border-2 rounded dark:border-white focus:border-white w-full lg:w-1/5">
+                {{--Moral--}}
+                <select name="moral" class="bg-[hsla(0,0%,100%,0.50)] dark:bg-[hsla(0,0%,100%,0.05)] dark:border-2 rounded dark:border-white focus:border-white w-full lg:w-1/6">
                     <option class="dark:bg-black" disabled selected>-בחר ערך חינוכי-</option>
                     <option class="dark:bg-black" value="parent-respact">כיבוד הורים</option>
                     <option class="dark:bg-black" value="friendship">חברות</option>
@@ -27,6 +27,7 @@
                     <option class="dark:bg-black" value="none">ללא</option>
                 </select>
 
+                {{--isAdult--}}
                 <div class="w-full lg:w-1/6 text-right lg:text-center flex items-center justify-center">
                     <label>
                         <input type="checkbox" name="isAdultReader" class="bg-[hsla(0,0%,100%,0.05)] dark:bg-[hsla(0,0%,100%,0.10)] dark:border-2 rounded dark:border-white focus:border-white">
@@ -34,12 +35,14 @@
                     </label>
                 </div>
 
+                {{--Language--}}
                 <select name="language" class="bg-[hsla(0,0%,100%,0.50)] dark:bg-[hsla(0,0%,100%,0.05)] dark:border-2 rounded dark:border-white focus:border-white w-full lg:w-1/6">
                     <option class="dark:bg-black" disabled>-בחר שפה-</option>
                     <option class="dark:bg-black" value="he" selected>עברית</option>
                     <option class="dark:bg-black" value="en">אנגלית</option>
                 </select>
 
+                {{--Style--}}
                 <select name="art-style" class="bg-[hsla(0,0%,100%,0.50)] dark:bg-[hsla(0,0%,100%,0.05)] dark:border-2 rounded dark:border-white focus:border-white w-full lg:w-1/6">
                     <option class="dark:bg-black" disabled selected>-עיצוב-</option>
                     <option class="dark:bg-black" value="Pixar">Pixar</option>
@@ -48,14 +51,19 @@
                     <option class="dark:bg-black" value="asked-in-text">אציין בעצמי</option>
                     <option class="dark:bg-black" value="random">אקראי</option>
                 </select>
-
-{{--                <div class="w-full lg:w-1/6 text-right lg:text-center">--}}
-{{--                    <label>--}}
-{{--                        <input type="checkbox" checked name="pictures" class="bg-black border-2 rounded border-white focus:border-white">--}}
-{{--                        צור תמונות--}}
-{{--                    </label>--}}
-{{--                </div>--}}
             </div>
+
+            @if(Auth::user()->characters->isNotEmpty())
+                <div class="lg:mt-3 mt-1 flex flex-col lg:flex-row lg:justify-center lg:gap-3 gap-y-1">
+                    <select name="character" class="bg-[hsla(0,0%,100%,0.50)] dark:bg-[hsla(0,0%,100%,0.05)] dark:border-2 rounded dark:border-white focus:border-white w-full lg:w-1/6">
+                        <option class="dark:bg-black" disabled selected>-בחר דמות-</option>
+                        <option class="dark:bg-black" value="">ללא - המציא דמות חדשה</option>
+                        @foreach(Auth::user()->characters as $character)
+                            <option class="dark:bg-black" value="{{$character->id}}">{{$character->name}}</option>
+                        @endforeach
+                    </select>
+                </div>
+            @endif
             <textarea required minlength="15" id="plot" name="plot" cols="4" maxlength="500" class="mt-4 h-28 bg-[hsla(0,0%,100%,0.50)] dark:bg-[hsla(0,0%,100%,0.10)] dark:border-2 rounded dark:border-white  font-medium dark:text-white focus:border-white"></textarea>
             <x-button class="mt-4 text-center flex items-center justify-center" id="submit" type="submit">
                 {{ __("Begin Your Adventure") }}

@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\BookController;
+use App\Http\Controllers\CharactersController;
 use App\Http\Controllers\CreditsController;
 use App\Http\Controllers\PaymentsController;
 use App\Http\Controllers\ProfileController;
@@ -29,6 +30,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/dashboard', fn() => view('dashboard'))->name('dashboard');
     Route::get('/books', [BookController::class, "index"])->name('books');
     Route::post('/books', [BookController::class, "store"]);
+    Route::get('/characters', [CharactersController::class, "index"])->name('characters');
+    Route::post('/characters', [CharactersController::class, "store"])->name('characters-store');
     Route::get('/credits', [CreditsController::class, "index"])->name('credits');
     Route::get('/payments', [PaymentsController::class, "store"]);
     Route::get('/payments/redirect', [PaymentsController::class, "redirect"]);

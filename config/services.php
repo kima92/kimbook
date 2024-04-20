@@ -43,6 +43,10 @@ return [
         'api_key'         => env('GROK_API_KEY'),
     ],
 
+    'replicate' => [
+        'api_key'         => env('REPLICATE_API_KEY'),
+    ],
+
     'chatProvider' => [
         'class'         => env('AI_CHAT_PROVIDER', "gpt"),
     ],

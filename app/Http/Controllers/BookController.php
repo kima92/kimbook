@@ -112,7 +112,10 @@ class BookController extends Controller
         $book->input = $request->input("plot");
         $book->uuid = \Str::uuid()->toString();
         $book->publication_date = now();
-        $book->additional_data = ["request" => $request->only(["age", "moral", "isAdultReader", "language", "pictures", "art-style"])];
+        $book->additional_data = [
+            "request" => $request->only(["age", "moral", "isAdultReader", "language", "pictures", "art-style", "character"]),
+            "imageSeed" => rand(1, 99999999),
+        ];
         $book->tags = "";
         $book->user()->associate($request->user());
 

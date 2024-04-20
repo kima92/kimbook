@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "4ae2124c32b0ed1f70ff2b5880aadc1f",
+    "content-hash": "a8ca559f584f1e4cb20ec683bed50eb7",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -61,6 +61,65 @@
                 "source": "https://github.com/asm89/stack-cors/tree/v2.2.0"
             },
             "time": "2023-11-14T13:51:46+00:00"
+        },
+        {
+            "name": "benbjurstrom/replicate-php",
+            "version": "v0.3.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/benbjurstrom/replicate-php.git",
+                "reference": "c3a00f79f6aeb2f27e35e9c5322e42eb0bd22730"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/benbjurstrom/replicate-php/zipball/c3a00f79f6aeb2f27e35e9c5322e42eb0bd22730",
+                "reference": "c3a00f79f6aeb2f27e35e9c5322e42eb0bd22730",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^8.1.0",
+                "saloonphp/saloon": "^3.0"
+            },
+            "require-dev": {
+                "laravel/pint": "^1.4",
+                "pestphp/pest": "^2.0.0",
+                "pestphp/pest-plugin-arch": "2.5.0",
+                "phpstan/phpstan": "^1.9.11",
+                "symfony/var-dumper": "^6.2.3"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "BenBjurstrom\\Replicate\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Ben Bjurstrom",
+                    "email": "bbjurstrom@gmail.com"
+                }
+            ],
+            "description": "A PHP client for the Replicate API",
+            "keywords": [
+                "package",
+                "php",
+                "replicate"
+            ],
+            "support": {
+                "issues": "https://github.com/benbjurstrom/replicate-php/issues",
+                "source": "https://github.com/benbjurstrom/replicate-php/tree/v0.3.0"
+            },
+            "funding": [
+                {
+                    "url": "https://github.com/benbjurstrom",
+                    "type": "github"
+                }
+            ],
+            "time": "2024-02-15T16:52:25+00:00"
         },
         {
             "name": "brick/math",
@@ -3610,6 +3669,87 @@
                 }
             ],
             "time": "2023-11-08T05:53:05+00:00"
+        },
+        {
+            "name": "saloonphp/saloon",
+            "version": "v3.8.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/saloonphp/saloon.git",
+                "reference": "e669e8554f275c83aaa0b7d9d219b442e269f75f"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/saloonphp/saloon/zipball/e669e8554f275c83aaa0b7d9d219b442e269f75f",
+                "reference": "e669e8554f275c83aaa0b7d9d219b442e269f75f",
+                "shasum": ""
+            },
+            "require": {
+                "guzzlehttp/guzzle": "^7.6",
+                "guzzlehttp/promises": "^1.5 || ^2.0",
+                "guzzlehttp/psr7": "^2.0",
+                "php": "^8.1",
+                "psr/http-factory": "^1.0",
+                "psr/http-message": "^1.1 || ^2.0"
+            },
+            "conflict": {
+                "sammyjo20/saloon": "*"
+            },
+            "require-dev": {
+                "ext-simplexml": "*",
+                "friendsofphp/php-cs-fixer": "^3.5",
+                "illuminate/collections": "^9.39 || ^10.0",
+                "league/flysystem": "^3.0",
+                "pestphp/pest": "^2.6",
+                "phpstan/phpstan": "^1.9",
+                "saloonphp/xml-wrangler": "^1.1",
+                "spatie/ray": "^1.33",
+                "symfony/dom-crawler": "^6.0 || ^7.0",
+                "symfony/var-dumper": "^6.3 || ^7.0"
+            },
+            "suggest": {
+                "illuminate/collections": "Required for the response collect() method.",
+                "saloonphp/xml-wrangler": "Required for the response xmlReader() method.",
+                "symfony/dom-crawler": "Required for the response dom() method.",
+                "symfony/var-dumper": "Required for default debugging drivers."
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Saloon\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Sam Carré",
+                    "email": "29132017+Sammyjo20@users.noreply.github.com",
+                    "role": "Developer"
+                }
+            ],
+            "description": "Build beautiful API integrations and SDKs with Saloon",
+            "homepage": "https://github.com/saloonphp/saloon",
+            "keywords": [
+                "api",
+                "api-integrations",
+                "saloon",
+                "sammyjo20",
+                "sdk"
+            ],
+            "support": {
+                "issues": "https://github.com/saloonphp/saloon/issues",
+                "source": "https://github.com/saloonphp/saloon/tree/v3.8.0"
+            },
+            "funding": [
+                {
+                    "url": "https://github.com/sammyjo20",
+                    "type": "github"
+                }
+            ],
+            "time": "2024-03-20T23:14:31+00:00"
         },
         {
             "name": "stichoza/google-translate-php",

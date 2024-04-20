@@ -28,6 +28,8 @@ use Illuminate\Support\Str;
  * @property-read int|null $chapters_count
  * @property-read string|null $costs_usd
  * @property-read string $status_message
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Image> $images
+ * @property-read int|null $images_count
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Reaction> $reactions
  * @property-read int|null $reactions_count
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Reading> $readings
@@ -84,6 +86,11 @@ class Book extends Model
         return $this->hasMany(Chapter::class);
     }
 
+    public function images()
+    {
+        return $this->hasMany(Image::class);
+    }
+
     public function reactions()
     {
         return $this->hasMany(Reaction::class);
@@ -105,6 +112,11 @@ class Book extends Model
     protected function getCostsUsdAttribute(): ?string
     {
         return $this->additional_data['costs_usd'] ?? null;
+    }
+
+    public function getRouteKeyName()
+    {
+        return "uuid";
     }
 
     public function toBookArray(): array

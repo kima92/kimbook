@@ -2,12 +2,14 @@
 
 namespace App\Providers;
 
+use App\AI\Art\ReplicateInstantId;
 use App\AI\Chat\ChatConversationInterface;
 use App\AI\Chat\ChatGPTConversation;
 use App\AI\Chat\ClaudeConversation;
 use App\Models\Book;
 use App\Models\Payment;
 use App\Models\User;
+use BenBjurstrom\Replicate\Replicate;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Arr;
@@ -94,6 +96,12 @@ class AppServiceProvider extends ServiceProvider
                 "gpt"    => ChatGPTConversation::class,
                 default  => throw new \RuntimeException("Unknown provider {$name}")
             });
+        });
+
+        $this->app->singleton(ReplicateInstantId::class, function () {
+            return new ReplicateInstantId(new Replicate(
+                apiToken: config('services.replicate.api_key'),
+            ));
         });
     }
 

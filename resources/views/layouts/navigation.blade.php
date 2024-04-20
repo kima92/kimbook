@@ -18,12 +18,11 @@
 
                 <!-- Navigation Links -->
                 <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
-                    <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
-                        {{ __('Dashboard') }}
+                    @foreach(['dashboard' => __('Dashboard'), 'books' => __('My Books'), 'characters' => __('My Characters')] as $route => $routeHTML)
+                    <x-nav-link :href="route($route)" :active="request()->routeIs($route)">
+                        {{ $routeHTML }}
                     </x-nav-link>
-                    <x-nav-link :href="route('books')" :active="request()->routeIs('books')">
-                        {{ __('My Books') }}
-                    </x-nav-link>
+                    @endforeach
                     <x-nav-link :href="route('credits')" :active="request()->routeIs('credits')">
                         <span>
                         <span class="text-blue-600">{{ $credits }} </span>  {{ __('Credits') }}

@@ -1,4 +1,4 @@
-@props(['pages', 'height' => 500])
+@props(['pages', 'height' => 500, 'ratio' => 2])
 <div id="{{ $id = Str::random(8) }}" {{ $attributes->merge(['class' => 'sample-flipbook hidden lg:block']) }}>
     @foreach ((array) $pages as $i => $page)
         <div @class(['hard' => $page["isCover"] ?? false])>
@@ -168,7 +168,7 @@
 </script>
 <script type="text/javascript">
     $("#{{ $id }}").turn({
-        width: {{ $height * 2 }},
+        width: {{ $height * $ratio }},
         height: {{ $height }},
         autoCenter: true,
         // direction: "rtl",

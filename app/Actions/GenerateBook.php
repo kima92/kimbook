@@ -8,6 +8,8 @@
 
 namespace App\Actions;
 
+use App\AI\Art\DalE3;
+use App\AI\Art\ReplicateInstantId;
 use App\AI\Chat\ChatConversationInterface;
 use App\AI\Prompts\RawPrompt;
 use App\Enums\BookStatuses;
@@ -37,6 +39,7 @@ class GenerateBook
 
         $book->status = BookStatuses::GeneratingText;
         $book->forceFill(["additional_data->chatModel" => $conv->getModel()]);
+        $book->forceFill(["additional_data->artModel"  => $book->additional_data["request"]["character"] ?? null ? ReplicateInstantId::class : DalE3::class]);
         $book->save();
 
         $conv->addSystemMessage(new RawPrompt($this->getSystemMessage($book, $conv)));
@@ -153,22 +156,13 @@ class GenerateBook
         Bus::batch($images->map(fn(Image $image) => new GenerateImage($image)))
             ->name("GenerateImage book {$book->id}")
             ->then(function (Batch $batch) use ($book) {
-                $book->status = BookStatuses::Ready;
-                $book->save();
-                event(new BookCompleted($book));
+                (new CheckCompleteBook())->execute($book);
             })->catch(function (Batch $batch, Throwable $e) use ($book) {
                 $book->status = BookStatuses::FailedImages;
                 $book->save();
                 event(new BookFailed($book));
             })
             ->dispatch();
-
-        $placeholdersData = Arr::get($data, 'placeholders', []);
-        foreach ($placeholdersData as $placeholderData) {
-            $placeholder = new Placeholder($placeholderData);
-            $placeholder->book_id = $book->id;
-            $placeholder->save();
-        }
 
         event(new BookWritten($book));
 
@@ -186,45 +180,6 @@ class GenerateBook
         return "{".Str::of($content)
                   ->after("{")
                   ->beforeLast("}") . "}";
-    }
-
-    /**
-     * @return string
-     */
-    protected function getPrompt(): string
-    {
-        return '{
-  "title": "The Adventure Camp by the Stream",
-  "description": "Join a group of 8-year-old children as they build a camp by the stream next to their house.",
-  "tags": ["children", "adventure", "camp", "friendship", "creativity"],
-  "chapters": [
-    {
-      "title": "Chapter One: The Discovery",
-      "content": "Once upon a time, in a small settlement nestled in the peaceful lowlands, lived a group of adventurous 8-year-old children - Mia, Ben, Lily, and Alex. They were the best of friends and loved spending time together. One sunny day, as they were playing near their houses, they heard the sound of rushing water.\n\nCuriosity sparked within them, and they followed the sound until they reached a beautiful stream gurgling beside Mia\'s house.\n\nExcitedly, the children decided to build a camp right next to the stream. They envisioned a magical place where they could have adventures, learn new things, and have lots of fun.\n\nWith determination in their hearts, they set off to work.",
-      "illustrator_instructions_prompt": "Illustrate the children discovering the stream and planning their camp."
-    },
-    {
-      "title": "Chapter Two: Teamwork and Creativity",
-      "content": "Mia, being the natural leader, came up with a brilliant plan for their camp. She assigned tasks to each of her friends. Ben was responsible for gathering branches to build a sturdy shelter. Lily was in charge of finding smooth stones for decorating their campfire area, and Alex took charge of collecting colorful wildflowers to brighten up the camp.\n\nUnder the bright blue sky, the children worked together, their laughter echoing through the trees. They used their creativity and imagination to transform the streamside into a magical campsite.\n\nMia used the branches to construct a cozy shelter, while Ben and Lily arranged the smooth stones in a circle, creating a perfect spot for their campfire. Alex carefully placed the wildflowers around the camp, adding a touch of beauty to their new space.",
-      "illustrator_instructions_prompt": "Illustrate the children working together, using their creativity to build their camp."
-    },
-    {
-      "title": "Chapter Three: Exploring Nature\'s Wonders",
-      "content": "With the camp complete, the children were ready to embark on their first adventure. They decided to explore nature\'s wonders surrounding their campsite.\n\nThey wandered through the dense forest, marveling at the towering trees and discovering colorful mushrooms and curious insects along the way. They learned about different plants and animals, developing a deep appreciation for the natural world.\n\nAs they reached the stream, they were fascinated by the sparkling water and the abundance of fish swimming downstream. They spent hours observing the water, mesmerized by its soothing sounds and magical reflections.",
-      "illustrator_instructions_prompt": "Illustrate the children exploring nature and observing the stream."
-    },
-    {
-      "title": "Chapter Four: Friendship and Adventure",
-      "content": "The camp by the stream became a gathering place for the children and their friends from the settlement. They shared stories, played games, and learned together. The camp became a symbol of their friendship and love for nature.\n\nOne evening, as the sun began to set, Mia had an idea. She suggested going on an exciting adventure to find the hidden treasure rumored to be hidden deep in the nearby woods. The children\'s eyes lit up with excitement, and they eagerly agreed to the quest.\n\nHand in hand, they ventured into the unknown, supporting and encouraging one another along the way. Although they didn\'t find any treasure, they discovered something even more valuable - the power of friendship and the courage to explore the world around them.",
-      "illustrator_instructions_prompt": "Illustrate the children embarking on their adventure, hand in hand, with smiles on their faces."
-    },
-    {
-      "title": "Chapter Five: Cherishing Memories",
-      "content": "As time passed, the camp by the stream held a special place in the children\'s hearts. They cherished the memories they shared and the lessons they learned. Each time they returned to the camp, they discovered something new, whether it was a bird\'s nest nestled in a tree or a secret wildflower blooming nearby.\n\nThe children\'s creativity, teamwork, and curiosity were nurtured by their time spent in the camp. They grew into brave and confident individuals, always ready for new adventures.\n\nAnd so, with hearts full of gratitude and joy, the children continued to visit their camp by the stream, only to discover that the real treasure was the bond they had forged and the love they shared.",
-      "illustrator_instructions_prompt": "Illustrate the children sitting together, reminiscing and cherishing the memories they made at the camp."
-    }
-  ]
-}';
     }
 
     protected function getSystemMessage(Book $book, ChatConversationInterface $conv): string

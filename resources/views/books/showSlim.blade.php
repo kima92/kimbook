@@ -22,7 +22,7 @@
   height: 600px;">
 <div>
 
-    <x-book :pages="$book->toBookArray()" :height="420"></x-book>
+    <x-book :pages="$book->toBookArray()" :height="420" :ratio="$book->additional_data['rtModel'] ?? null == ReplicateInstantId::class ? 1.65 : 2"></x-book>
 </div>
 </body>
 </html>

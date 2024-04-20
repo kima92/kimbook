@@ -44,7 +44,7 @@
             <div class="p-4 lg:p-6 rounded-3xl text-right w-full mt-2">
 {{--            <div class="mx-auto2 p-6 bg-[hsla(0,0%,0%,0.70)] rounded-3xl text-right" style="width: 1040px">--}}
                 @if($canView)
-                    <x-book :pages="$book->toBookArray()"></x-book>
+                    <x-book :pages="$book->toBookArray()" :ratio="$book->additional_data['artModel'] ?? null == \App\AI\Art\ReplicateInstantId::class ? 1.65 : 2"></x-book>
                 @else
                     <div class="relative overflow-hidden bg-contain bg-no-repeat bg-center" style="height: 500px;padding: 30px;background-image: url('{{ $book->chapters->first()->images->first()->image_url }}');">
                         <div>

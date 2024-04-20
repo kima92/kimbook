@@ -23,6 +23,8 @@ use Illuminate\Notifications\Notifiable;
  * @property string|null $payment_token
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Book> $books
  * @property-read int|null $books_count
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Character> $characters
+ * @property-read int|null $characters_count
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Credit> $credits
  * @property-read int|null $credits_count
  * @property-read \Illuminate\Notifications\DatabaseNotificationCollection<int, \Illuminate\Notifications\DatabaseNotification> $notifications
@@ -95,6 +97,11 @@ class User extends Authenticatable implements MustVerifyEmail// FilamentUser
     public function readings(): HasMany
     {
         return $this->hasMany(Reading::class);
+    }
+
+    public function characters(): HasMany
+    {
+        return $this->hasMany(Character::class);
     }
 
     public function credits(): HasMany
