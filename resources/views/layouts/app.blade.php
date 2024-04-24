@@ -21,6 +21,14 @@
         <link href="/css/book.css" rel="stylesheet">
 
         {{ \App\Utils\Vite::compile() }}
+
+        <script type="text/javascript">
+            (function(c,l,a,r,i,t,y){
+                c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+                t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+                y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+            })(window, document, "clarity", "script", "m1krx3jy7p");
+        </script>
     </head>
     <body class="font-sans antialiased" style="background-color: #0b1012">
         <div class="min-h-screen bg-gray-100">
