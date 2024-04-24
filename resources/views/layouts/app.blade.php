@@ -53,6 +53,9 @@
                             <div class="flex justify-center">
                                 {{ $slot }}
                             </div>
+                            <div class="w-full text-center font-extrabold text-purple-500 mt-10">
+                                {{ config("app.name") }} - {{ config("mail.mailers.smtp.username") }}
+                            </div>
                         </div>
                     </div>
                 </section>

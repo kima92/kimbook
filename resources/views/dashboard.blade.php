@@ -80,6 +80,14 @@
                 <div id="book-status-message" class="mt-4"></div>
             </div>
         </form>
+
+
+        <div class="flex lg:flex-row">
+            <div class="w-full mt-2 lg:mt-4">
+                * פרטיותכם חשובה לנו מאוד. כלל הסיפורים והתמונות נשמרים על שרתינו באופן מאובטח ואינם גלויים לשאר המשתמשים.<br>
+                * ניתן לשתף סיפורים עם חברים על ידי שליחת קישור האתר.
+            </div>
+        </div>
     </div>
 
     <script>

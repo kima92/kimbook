@@ -17,7 +17,7 @@
                 </div>
 
                 <!-- Navigation Links -->
-                <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
+                <div class="hidden gap-5 flex-row sm:-my-px sm:ml-10 sm:flex">
                     @foreach(['dashboard' => __('Dashboard'), 'books' => __('My Books'), 'characters' => __('My Characters')] as $route => $routeHTML)
                     <x-nav-link :href="route($route)" :active="request()->routeIs($route)">
                         {{ $routeHTML }}

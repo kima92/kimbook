@@ -60,13 +60,14 @@
                     </label>
 
                 </div>
-                <x-button class="mb-4 text-center flex items-center justify-center" id="submit" type="submit">
+                <x-button class="mb-4 text-center flex items-center justify-center mt-4 lg:mt-2" id="submit" type="submit">
                     {{ __("Create") }}
                 </x-button>
             </form>
 
             <div class="flex lg:flex-row">
                 <div class="flex flex-row w-full">
+                    * מומלץ לבחור תמונת חצי גוף עליון. תמונה קרובה מידי בה רואים רק פנים תפגע ביצירתיות התוצרים
                 </div>
             </div>
         </div>
