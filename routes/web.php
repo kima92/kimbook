@@ -24,6 +24,7 @@ Route::get('/', function () {
 Route::get('/books/{uuid}', [BookController::class, "show"]);
 Route::put('/books/{uuid}', [BookController::class, "update"]);
 Route::get('/books/{uuid}/slim', [BookController::class, "showSlim"]);
+Route::get('/books/{uuid}/print', [BookController::class, "print"]);
 Route::get('/books/{uuid}/next', [BookController::class, "next"])->middleware(['auth', 'verified']);
 
 Route::middleware(['auth', 'verified'])->group(function () {

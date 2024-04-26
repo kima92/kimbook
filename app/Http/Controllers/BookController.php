@@ -9,6 +9,7 @@ use App\Jobs\StartGeneratingBook;
 use App\Models\Book;
 use App\Models\Reading;
 use App\Models\User;
+use Barryvdh\DomPDF\PDF;
 use Illuminate\Http\Request;
 use Log;
 use Symfony\Component\HttpFoundation\Response;
@@ -87,6 +88,16 @@ class BookController extends Controller
             ->firstOrFail();
 
         return view('books.showSlim', compact('book'));
+    }
+
+    public function print(Request $request, string $uuid)
+    {
+        $book = Book::query()
+            ->with('chapters.images', 'reactions')
+            ->where('uuid', $uuid)
+            ->firstOrFail();
+
+        return view('books.print', compact('book'));
     }
 
     public function store(Request $request)
