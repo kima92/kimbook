@@ -22,3 +22,4 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 Route::post('/payments/callbacks', [PaymentsController::class, "callbacks"]);
 Route::any('/replicate/instant-id/{book}/{image}', [ReplicateController::class, "instantId"]);
+Route::any('/replicate/sdxl-lightning-4step/{book}/{image}', [ReplicateController::class, "sdxlLightning4Step"]);

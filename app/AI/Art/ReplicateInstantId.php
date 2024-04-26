@@ -66,7 +66,6 @@ class ReplicateInstantId
 
         Log::debug("[ReplicateInstantId][create] Requesting ", $input + ["version" => $version]);
 
-        $response = $this->client->predictions()->list();
         $response = $this->client->predictions()
             ->withWebhook(config("app.url") . "/api/replicate/instant-id/{$image->book->uuid}/{$image->id}")
             ->create($version, $input);

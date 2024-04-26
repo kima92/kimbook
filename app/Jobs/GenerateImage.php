@@ -7,6 +7,7 @@ use App\AI\Art\DalE3;
 use App\AI\Art\GenerateImageResult;
 use App\AI\Art\GenerateImageStatuses;
 use App\AI\Art\ReplicateInstantId;
+use App\AI\Art\ReplicateSdxlLightning4Step;
 use App\Models\Image;
 use Illuminate\Bus\Batchable;
 use Illuminate\Bus\Queueable;
@@ -38,11 +39,12 @@ class GenerateImage implements ShouldQueue
     {
         \Log::debug("[GenerateImage][handle] Got image {$this->image->id} with prompt '{$this->image->prompt}'");
 
+        /** @var GenerateImageResult $result */
         if ($this->image->book->additional_data["request"]["character"] ?? null) {
             $result = retry(1, fn() => app(ReplicateInstantId::class)->create($this->image));
         } else {
-            /** @var GenerateImageResult $result */
-            $result = retry(1, fn() => (new DalE3(app(ClientContract::class)))->create($this->image));
+            $result = retry(1, fn() => app(ReplicateSdxlLightning4Step::class)->create($this->image));
+//            $result = retry(1, fn() => (new DalE3(app(ClientContract::class)))->create($this->image));
         }
 
         if ($result->status == GenerateImageStatuses::Completed) {
