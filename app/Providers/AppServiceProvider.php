@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use App\AI\Art\ReplicateInstantId;
+use App\AI\Art\ReplicateSdxlLightning4Step;
 use App\AI\Chat\ChatConversationInterface;
 use App\AI\Chat\ChatGPTConversation;
 use App\AI\Chat\ClaudeConversation;
@@ -100,6 +101,12 @@ class AppServiceProvider extends ServiceProvider
 
         $this->app->singleton(ReplicateInstantId::class, function () {
             return new ReplicateInstantId(new Replicate(
+                apiToken: config('services.replicate.api_key'),
+            ));
+        });
+
+        $this->app->singleton(ReplicateSdxlLightning4Step::class, function () {
+            return new ReplicateSdxlLightning4Step(new Replicate(
                 apiToken: config('services.replicate.api_key'),
             ));
         });

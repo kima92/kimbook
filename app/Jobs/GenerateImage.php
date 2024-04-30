@@ -43,8 +43,8 @@ class GenerateImage implements ShouldQueue
         if ($this->image->book->additional_data["request"]["character"] ?? null) {
             $result = retry(1, fn() => app(ReplicateInstantId::class)->create($this->image));
         } else {
-            $result = retry(1, fn() => app(ReplicateSdxlLightning4Step::class)->create($this->image));
-//            $result = retry(1, fn() => (new DalE3(app(ClientContract::class)))->create($this->image));
+//            $result = retry(1, fn() => app(ReplicateSdxlLightning4Step::class)->create($this->image));
+            $result = retry(1, fn() => (new DalE3(app(ClientContract::class)))->create($this->image));
         }
 
         if ($result->status == GenerateImageStatuses::Completed) {
