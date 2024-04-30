@@ -187,6 +187,10 @@
                     console.log(book);
 
                     statusMessageElement.textContent = book.status_message;
+                    if ({{\App\Enums\BookStatuses::Initial->value}} === book.status) {
+                        statusMessageElement.textContent += "<br>בזמן זה מומלץ ללכת לצחצח שיניים! כשהספר יהיה מוכן תתקבל הודעה באימייל"
+                        return;
+                    }
                     if ({{\App\Enums\BookStatuses::Ready->value}} === book.status) {
                         setTimeout(() => { window.location.href = "/books/" + book.uuid; }, 3000);
                         return;

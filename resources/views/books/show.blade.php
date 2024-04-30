@@ -11,9 +11,9 @@
                     {{ $book->title }}</h1>
                 <h2 class="mt-3 text-lg">{{ $book->user->name }}</h2>
                 <div class="mt-3 flex flex-row">
-                    <svg width="22px" height="22px" viewBox="0 -4 20 20" class="mx-1">
+                    <svg width="22px" height="22px" viewBox="0 -4 20 20"  class="mx-1 inline fill-purple-700 dark:fill-white">
                         <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-                            <g id="Dribbble-Light-Preview" transform="translate(-260.000000, -4563.000000)" fill="#ffffff">
+                            <g id="Dribbble-Light-Preview" transform="translate(-260.000000, -4563.000000)" class="fill-purple-700 dark:fill-white">>
                                 <g id="icons" transform="translate(56.000000, 160.000000)">
                                     <path d="M216,4409.00052 C216,4410.14768 215.105,4411.07682 214,4411.07682 C212.895,4411.07682 212,4410.14768 212,4409.00052 C212,4407.85336 212.895,4406.92421 214,4406.92421 C215.105,4406.92421 216,4407.85336 216,4409.00052 M214,4412.9237 C211.011,4412.9237 208.195,4411.44744 206.399,4409.00052 C208.195,4406.55359 211.011,4405.0763 214,4405.0763 C216.989,4405.0763 219.805,4406.55359 221.601,4409.00052 C219.805,4411.44744 216.989,4412.9237 214,4412.9237 M214,4403 C209.724,4403 205.999,4405.41682 204,4409.00052 C205.999,4412.58422 209.724,4415 214,4415 C218.276,4415 222.001,4412.58422 224,4409.00052 C222.001,4405.41682 218.276,4403 214,4403">
                                     </path>
@@ -25,7 +25,7 @@
                 </div>
                 <div class="mt-3 flex flex-row">
                     <a target="_blank" href="{{url("/books/{$book->uuid}/print")}}">
-                        <svg fill="#ffffff" height="25px" width="25px" class="mx-1 inline"
+                        <svg height="25px" width="25px" class="mx-1 inline fill-purple-700 dark:fill-white"
                              viewBox="0 0 64 64" enable-background="new 0 0 64 64" xml:space="preserve">
                             <g id="Printer">
                                 <path d="M57.7881012,14.03125H52.5v-8.0625c0-2.2091999-1.7909012-4-4-4h-33c-2.2091999,0-4,1.7908001-4,4v8.0625H6.2119002
