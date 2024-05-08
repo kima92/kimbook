@@ -8,8 +8,10 @@
 
 namespace App\AI\Art;
 
+use App\AI\GenerateAIStatuses;
+
 class GenerateImageResult
 {
 
-    public function __construct(public readonly string $id, public readonly GenerateImageStatuses $status, public readonly array $images) { }
+    public function __construct(public readonly string $id, public readonly GenerateAIStatuses $status, public readonly array $images) { }
 }

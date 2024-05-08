@@ -8,9 +8,11 @@
 
 namespace App\AI\Chat;
 
+use App\AI\GenerateAIStatuses;
 use App\AI\Prompts\RawPrompt;
 use Illuminate\Support\Collection;
 use OpenAI\Contracts\ClientContract;
+use OpenAI\Responses\Chat\CreateResponse;
 
 class ChatGPTConversation extends BaseConversation implements ChatConversationInterface
 {
@@ -37,23 +39,28 @@ class ChatGPTConversation extends BaseConversation implements ChatConversationIn
         return $this;
     }
 
-    public function send(RawPrompt $prompt): string
+    public function send(RawPrompt $prompt): GenerateMessageResult
     {
         $this->messages[] = ['role' => 'user', 'content' => $prompt->__toString()];
 
-//        var_dump($this->messages);
 
-        $result = retry(1,
-        fn() => $this->gptClient->chat()->create([
+        $payload = [
             'model'    => $this->currentModel,
 //            'model' => 'gpt-4',
             'messages' => $this->messages,
-        ]));
+        ];
+
+        \Log::debug("[ChatGPTConversation] Requesting", $payload);
+
+        /** @var CreateResponse $result */
+        $result = retry(1, fn() => $this->gptClient->chat()->create($payload));
+
+        \Log::debug("[ChatGPTConversation] Got response", $result->toArray());
 
         $this->usages[] = $result->usage->toArray();
         $message = $this->messages[] = $result['choices'][0]["message"];
 
-        return $message["content"];
+        return new GenerateMessageResult($this->id, GenerateAIStatuses::Completed, $message["content"]);
     }
 
     public function getUsages(): Collection

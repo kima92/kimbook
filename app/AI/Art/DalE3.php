@@ -8,6 +8,7 @@
 
 namespace App\AI\Art;
 
+use App\AI\GenerateAIStatuses;
 use App\Models\Image;
 use OpenAI\Contracts\ClientContract;
 
@@ -35,6 +36,6 @@ class DalE3
 
         $image->book()->increment("additional_data->costs_usd", "0.040");
 
-        return new GenerateImageResult(\Str::uuid(), GenerateImageStatuses::Completed, [$response->data[0]->url]);
+        return new GenerateImageResult(\Str::uuid(), GenerateAIStatuses::Completed, [$response->data[0]->url]);
     }
 }

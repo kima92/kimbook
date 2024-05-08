@@ -11,6 +11,7 @@ namespace App\Actions;
 use App\AI\Art\DalE3;
 use App\AI\Art\ReplicateInstantId;
 use App\AI\Chat\ChatConversationInterface;
+use App\AI\GenerateAIStatuses;
 use App\AI\Prompts\RawPrompt;
 use App\Enums\BookStatuses;
 use App\Events\BookFailed;
@@ -31,25 +32,39 @@ use Throwable;
 
 class GenerateBook
 {
-    public function handle(Book $book): Book
-    {
-        $conv = app(ChatConversationInterface::class);
+    public function __construct(protected ChatConversationInterface $chatConv) { }
 
+    public function handle(Book $book): void
+    {
         $book->status = BookStatuses::GeneratingText;
-        $book->forceFill(["additional_data->chatModel" => $conv->getModel()]);
-        $book->forceFill(["additional_data->artModel"  => $book->additional_data["request"]["character"] ?? null ? ReplicateInstantId::class : DalE3::class]);
+        $book->forceFill(["additional_data->chatModel" => $this->chatConv->getModel()]);
+        $book->forceFill([
+            "additional_data->artModel" => $book->additional_data["request"]["character"] ?? null ? ReplicateInstantId::class : DalE3::class
+        ]);
         $book->save();
 
-        $conv->addSystemMessage(new RawPrompt($this->getSystemMessage($book, $conv)));
-        $message = $conv->send(new RawPrompt($book->input));
+        $this->chatConv->addSystemMessage(new RawPrompt($this->getSystemMessage($book)));
+        $this->chatConv->setId("generate_book:" . $book->id);
 
+        $result = $this->chatConv->send(new RawPrompt($book->input));
+
+        match ($result->status) {
+            GenerateAIStatuses::Failed => throw new \RuntimeException("Malformed response from openAI"),
+            GenerateAIStatuses::Completed => $this->completeBook($book, $result->message),
+
+            default => null // Nothing
+        };
+    }
+
+    public function completeBook(Book $book, string $message): Book
+    {
         try {
             $bookResponse = json_decode($this->getJsonFromMessage($message), true, flags: JSON_THROW_ON_ERROR);
         } catch (JsonException) {
-            throw new \RuntimeException("Malformed response from openAI");
+            throw new \RuntimeException("Malformed response from AI Provider");
         }
 
-        Log::debug("[GenerateBook][handle] Received bookResponse", $bookResponse);
+        Log::debug("[GenerateBook][completeBook] Received bookResponse", $bookResponse);
 
         if ($bookResponse["error_message"] ?? null) {
             Log::debug("[GenerateBook][handle] Got error from provider: {$bookResponse["error_message"]}", $bookResponse);
@@ -59,26 +74,10 @@ class GenerateBook
             throw new \RuntimeException("GenerateBook: " . json_encode($bookResponse, true));
         }
 
-        for ($i = 2; $i <= 4 && false; $i++) {
-            $prompt = config("prompts." . ($i == 4 ? "last_following_chapters" : "following_chapters"));
-            $message = $conv->send(new RawPrompt($prompt));
-
-            try {
-                $additionalResponse = json_decode($this->getJsonFromMessage($message), true, flags: JSON_THROW_ON_ERROR);
-            } catch (JsonException) {
-                throw new \RuntimeException("Malformed response from openAI");
-            }
-
-            $bookResponse["chapters"] = array_merge(
-                $bookResponse["chapters"],
-                $additionalResponse["chapters"]
-            );
-        }
-
-        return $this->fromArray($book, $bookResponse, $conv);
+        return $this->fromArray($book, $bookResponse);
     }
 
-    public function fromArray(Book $book, array $data, ChatConversationInterface $conv): Book
+    public function fromArray(Book $book, array $data): Book
     {
         \Log::debug("[GenerateBook][fromArray] Got Request: " . json_encode($data, JSON_UNESCAPED_UNICODE));
         $data = $this->trimArrayKeys($data);
@@ -107,8 +106,8 @@ class GenerateBook
         }
         $book->fill(Arr::only($data, ['title', 'description', 'cover_image', 'tags', 'rating']));
         $book->fill([
-            "additional_data->chatGPTUsages" => $conv->getUsages(),
-            "additional_data->costs_usd" => $conv->getUsages()->sum(fn($usage) => $usage['prompt_cost'] + $usage['completion_cost']),
+            "additional_data->chatGPTUsages" => $this->chatConv->getUsages(),
+            "additional_data->costs_usd" => $this->chatConv->getUsages()->sum(fn($usage) => $usage['prompt_cost'] + $usage['completion_cost']),
         ]);
         $book->save();
 
@@ -180,7 +179,7 @@ class GenerateBook
                   ->beforeLast("}") . "}";
     }
 
-    protected function getSystemMessage(Book $book, ChatConversationInterface $conv): string
+    protected function getSystemMessage(Book $book): string
     {
         $request = $book->additional_data["request"];
         $chapters = match ((int)$request["isAdultReader"] . "|" . $request["age"]) {
@@ -193,7 +192,7 @@ class GenerateBook
         };
 
         $replacements = [
-            ":Language:"             => match ($conv->isSupportedLanguage($request["language"]) ? $request["language"] : "en") {
+            ":Language:"             => match ($this->chatConv->isSupportedLanguage($request["language"]) ? $request["language"] : "en") {
                 "en" => "English",
                 "he" => "Hebrew",
             },
@@ -205,9 +204,14 @@ class GenerateBook
             },
             ":SentencesInPageRange:" => $chapters["sentences"],
             ":PagesRange:"           => $chapters["pages"],
+            ":CharacterInfo"         => $book->additional_data["request"]["character"] ?? null ? "User defined character: :CharacterName:, :CharacterInfo:" : ""
         ];
 
-        return str_replace(array_keys($replacements), array_values($replacements), config("prompts.generate-tale"));
+        return str_replace(
+            array_keys($replacements),
+            array_values($replacements),
+                config("prompts.generate-tale." . get_class($this->chatConv)) ?? config("prompts.generate-tale.default")
+        );
     }
 
     private function trimArrayKeys(array $input): array

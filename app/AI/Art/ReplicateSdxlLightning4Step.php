@@ -10,7 +10,7 @@
 
 namespace App\AI\Art;
 
-use App\Models\Character;
+use App\AI\GenerateAIStatuses;
 use App\Models\Image;
 use BenBjurstrom\Replicate\Replicate;
 use Log;
@@ -28,23 +28,18 @@ class ReplicateSdxlLightning4Step
         $prompt = Str::remove("Illustrate ", $image->prompt);
         $version = '727e49a643e999d602a896c774a0658ffefea21465756a6ce24b7ea4165eba6a';
 
-        $imgPath = null;
-        if ($characterId = $image->book->additional_data["request"]["character"] ?? null) {
-            $imgPath = url(Character::find($characterId)->image_path);
-        }
-
         $input   = [
             'prompt'          => $prompt,
-            "negative_prompt" => "(lowres, low quality, worst quality:1.2), (text:1.2), watermark, painting, drawing, illustration, glitch, deformed, mutated, cross-eyed, ugly, disfigured (lowres, low quality, worst quality:1.2), (text:1.2), watermark, glitch,deformed, mutated, cross-eyed, ugly, disfigured",
-            'width'           => 640,
-            'height'          => 640,
+            "negative_prompt" => "(lowres, low quality, worst quality:1.2), (text:1.2), watermark, painting, drawing, illustration, glitch, deformed, mutated, cross-eyed, ugly, disfigured (lowres, low quality, worst quality:1.2), (text:1.2), watermark, glitch,deformed, mutated, cross-eyed, ugly, disfigured, muslim, arab, Keffiyeh",
+            'width'           => 1024,
+            'height'          => 1024,
             'scheduler' => 'K_EULER',
 
 //            'scheduler' => 'DPMSolverMultistep',
             'seed'            => $image->book->additional_data["imageSeed"] ?? null,
             'num_outputs' => 1,
             'num_inference_steps' => 4,
-            'guidance_scale' => 8,
+            'guidance_scale' => 0,
 //            'guidance_scale' => 16.63,
 
             'disable_safety_checker' => true
@@ -58,6 +53,6 @@ class ReplicateSdxlLightning4Step
 
         Log::debug("[ReplicateSdxlLightning4Step][create] Got response for prompt {$prompt}", (array) $response);
 
-        return new GenerateImageResult($response->id, GenerateImageStatuses::Initial, []);
+        return new GenerateImageResult($response->id, GenerateAIStatuses::Initial, []);
     }
 }

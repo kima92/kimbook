@@ -7,6 +7,9 @@ use App\AI\Art\ReplicateSdxlLightning4Step;
 use App\AI\Chat\ChatConversationInterface;
 use App\AI\Chat\ChatGPTConversation;
 use App\AI\Chat\ClaudeConversation;
+use App\AI\Chat\OllamaLlama3Conversation;
+use App\AI\Chat\ReplicateLlama3_70B_InstructConversation;
+use App\AI\Chat\ReplicateLlama3Conversation;
 use App\Models\Book;
 use App\Models\Payment;
 use App\Models\User;
@@ -95,20 +98,29 @@ class AppServiceProvider extends ServiceProvider
             return $app->make(match ($name) {
                 "claude" => ClaudeConversation::class,
                 "gpt"    => ChatGPTConversation::class,
+                "llama3" => ReplicateLlama3Conversation::class,
+                "llama3-70b-instruct" => ReplicateLlama3_70B_InstructConversation::class,
+                "ollama-llama3" => OllamaLlama3Conversation::class,
                 default  => throw new \RuntimeException("Unknown provider {$name}")
             });
         });
 
-        $this->app->singleton(ReplicateInstantId::class, function () {
-            return new ReplicateInstantId(new Replicate(
+        $this->app->singleton(Replicate::class, function (Application $app) {
+            return new Replicate(
                 apiToken: config('services.replicate.api_key'),
-            ));
+            );
         });
 
-        $this->app->singleton(ReplicateSdxlLightning4Step::class, function () {
-            return new ReplicateSdxlLightning4Step(new Replicate(
-                apiToken: config('services.replicate.api_key'),
-            ));
+        $this->app->bind(ReplicateInstantId::class, function (Application $app) {
+            return new ReplicateInstantId($app->make(Replicate::class));
+        });
+
+        $this->app->bind(ReplicateSdxlLightning4Step::class, function (Application $app) {
+            return new ReplicateSdxlLightning4Step($app->make(Replicate::class));
+        });
+
+        $this->app->bind(ReplicateLlama3Conversation::class, function (Application $app) {
+            return new ReplicateLlama3Conversation($app->make(Replicate::class));
         });
     }
 

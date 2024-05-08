@@ -18,7 +18,7 @@
                 </select>
 
                 {{--Moral--}}
-                <select name="moral" class="bg-[hsla(0,0%,100%,0.50)] dark:bg-[hsla(0,0%,100%,0.05)] dark:border-2 rounded dark:border-white focus:border-white w-full lg:w-1/6">
+                <select name="moral" required class="bg-[hsla(0,0%,100%,0.50)] dark:bg-[hsla(0,0%,100%,0.05)] dark:border-2 rounded dark:border-white focus:border-white w-full lg:w-1/6">
                     <option class="dark:bg-black" disabled selected>-בחר ערך חינוכי-</option>
                     <option class="dark:bg-black" value="parent-respact">כיבוד הורים</option>
                     <option class="dark:bg-black" value="friendship">חברות</option>
@@ -186,10 +186,9 @@
                 .then(book => {
                     console.log(book);
 
-                    statusMessageElement.textContent = book.status_message;
+                    statusMessageElement.innerHTML = book.status_message;
                     if ({{\App\Enums\BookStatuses::Initial->value}} === book.status) {
-                        statusMessageElement.textContent += "<br>בזמן זה מומלץ ללכת לצחצח שיניים! כשהספר יהיה מוכן תתקבל הודעה באימייל"
-                        return;
+                        statusMessageElement.innerHTML += "<br>בזמן זה מומלץ ללכת לצחצח שיניים! כשהספר יהיה מוכן תתקבל הודעה באימייל"
                     }
                     if ({{\App\Enums\BookStatuses::Ready->value}} === book.status) {
                         setTimeout(() => { window.location.href = "/books/" + book.uuid; }, 3000);

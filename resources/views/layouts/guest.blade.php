@@ -23,7 +23,7 @@
             })(window, document, "clarity", "script", "m1krx3jy7p");
         </script>
 {{--        {!! RecaptchaV3::initJs() !!}--}}
-          </head>
+    </head>
     <body class="font-sans text-gray-900 antialiased">
     <section>
         <!-- Jumbotron -->
@@ -44,4 +44,5 @@
         </div>
     </section>
     </body>
+    @stack('scripts')
 </html>

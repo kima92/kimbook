@@ -9,6 +9,7 @@
 namespace App\AI\Chat;
 
 use App\AI\Claude\Client;
+use App\AI\GenerateAIStatuses;
 use App\AI\Prompts\RawPrompt;
 use Illuminate\Support\Collection;
 
@@ -34,7 +35,7 @@ class ClaudeConversation extends BaseConversation implements ChatConversationInt
         return $this;
     }
 
-    public function send(RawPrompt $prompt): string
+    public function send(RawPrompt $prompt): GenerateMessageResult
     {
         $this->messages[] = ['role' => 'user', 'content' => $prompt->__toString()];
 
@@ -44,7 +45,7 @@ class ClaudeConversation extends BaseConversation implements ChatConversationInt
         $this->usages[] = $result['usage'];
         $message = $this->messages[] = ['role' => 'assistant', 'content' => $result['content'][0]['text']];
 
-        return $message['content'];
+        return new GenerateMessageResult($this->id, GenerateAIStatuses::Completed, $message['content']);
     }
 
     public function getUsages(): Collection

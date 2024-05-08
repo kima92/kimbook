@@ -8,6 +8,7 @@
 
 namespace App\AI\Art;
 
+use App\AI\GenerateAIStatuses;
 use App\Models\Character;
 use App\Models\Image;
 use BenBjurstrom\Replicate\Replicate;
@@ -36,7 +37,7 @@ class ReplicateInstantId
             'image'           => $imgPath,
             'prompt'          => $prompt,
 //            'negative_prompt' => '(lowres, low quality, worst quality:1.2), (text:1.2), watermark, glitch, deformed, mutated, cross-eyed, ugly, disfigured (lowres, low quality, worst quality:1.2), (text:1.2), watermark, painting, drawing, illustration, glitch,deformed, mutated, cross-eyed, ugly, disfigured',
-            "negative_prompt" => "(lowres, low quality, worst quality:1.2), (text:1.2), watermark, painting, drawing, illustration, glitch, deformed, mutated, cross-eyed, ugly, disfigured (lowres, low quality, worst quality:1.2), (text:1.2), watermark, glitch,deformed, mutated, cross-eyed, ugly, disfigured",
+            "negative_prompt" => "(lowres, low quality, worst quality:1.2), (text:1.2), watermark, painting, drawing, illustration, glitch, deformed, mutated, cross-eyed, ugly, disfigured (lowres, low quality, worst quality:1.2), (text:1.2), watermark, glitch,deformed, mutated, cross-eyed, ugly, disfigured, muslim, arab, Keffiyeh",
             'sdxl_weights'    => 'stable-diffusion-xl-base-1.0',
 //            'sdxl_weights'    => 'protovision-xl-high-fidel',
             'width'           => 640,
@@ -72,6 +73,6 @@ class ReplicateInstantId
 
         Log::debug("[ReplicateInstantId][create] Got response for prompt {$prompt}", (array) $response);
 
-        return new GenerateImageResult($response->id, GenerateImageStatuses::Initial, []);
+        return new GenerateImageResult($response->id, GenerateAIStatuses::Initial, []);
     }
 }

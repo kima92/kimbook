@@ -111,7 +111,7 @@ class BookController extends Controller
             ], Response::HTTP_PAYMENT_REQUIRED);
         }
 
-        $request->mergeIfMissing(["isAdultReader" => false]);
+        $request->mergeIfMissing(["isAdultReader" => false, "moral" => "none"]);
 
         // Minimum prompt word count
 

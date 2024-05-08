@@ -15,7 +15,7 @@ interface ChatConversationInterface
 {
     public function addSystemMessage(RawPrompt $prompt): static;
 
-    public function send(RawPrompt $prompt): string;
+    public function send(RawPrompt $prompt): GenerateMessageResult;
 
     public function getUsages(): Collection;
     public function isSupportedLanguage(string $language): bool;

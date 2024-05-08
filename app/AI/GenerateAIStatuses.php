@@ -6,9 +6,9 @@
  * Time: 9:46
  */
 
-namespace App\AI\Art;
+namespace App\AI;
 
-enum GenerateImageStatuses: int
+enum GenerateAIStatuses: int
 {
 
     case Initial   = 1;

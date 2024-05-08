@@ -41,4 +41,9 @@ class Niqqud
         // Regular expression to match Hebrew letters and Niqqud
         return preg_match('/[\x{0591}-\x{05C7}]/u', $string);
     }
+
+    public function remove($text): string
+    {
+        return preg_replace_callback('/\p{Mn}/u', fn ($match) => '', $text);
+    }
 }

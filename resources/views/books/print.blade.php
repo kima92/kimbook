@@ -1,9 +1,17 @@
 @php($pages ??= [])
 @php($height ??= 300)
 @php($ratio ??= 2)
+<?php
+/** @var \App\Models\Book $book */
+$data = $book->toBookArray();
+
+$frontCover = array_shift($data);
+$backCover = array_pop($data);
+$splitPages = array_chunk($data, 2);
+?>
 <html lang="he" dir="rtl">
 <head>
-    <title>Bootstrap Example</title>
+    <title>{{ (new \App\Actions\Niqqud())->remove($book->title) }}</title>
     <meta charset="utf-8">
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -24,14 +32,7 @@
     </style>
 </head>
 <body class="landscape" dir="rtl" style="padding: 0;">
-    <?php
-    /** @var \App\Models\Book $book */
-    $data = $book->toBookArray();
 
-    $frontCover = array_shift($data);
-    $backCover = array_pop($data);
-    $splitPages = array_chunk($data, 2);
-    ?>
 
     <div style="padding: 0; height: 100%">
         <div style="overflow: hidden; background-size: contain;   	background-position: center;
