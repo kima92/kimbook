@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use App\AI\Art\ReplicateInstantId;
+use App\AI\Art\ReplicatePhotomakerStyle;
 use App\AI\Art\ReplicateSdxlLightning4Step;
 use App\AI\Chat\ChatConversationInterface;
 use App\AI\Chat\ChatGPTConversation;
@@ -117,6 +118,10 @@ class AppServiceProvider extends ServiceProvider
 
         $this->app->bind(ReplicateSdxlLightning4Step::class, function (Application $app) {
             return new ReplicateSdxlLightning4Step($app->make(Replicate::class));
+        });
+
+        $this->app->bind(ReplicatePhotomakerStyle::class, function (Application $app) {
+            return new ReplicatePhotomakerStyle($app->make(Replicate::class));
         });
 
         $this->app->bind(ReplicateLlama3Conversation::class, function (Application $app) {

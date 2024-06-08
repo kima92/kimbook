@@ -6,6 +6,7 @@ use App\Actions\DownloadImageFromUrl;
 use App\AI\Art\DalE3;
 use App\AI\Art\GenerateImageResult;
 use App\AI\Art\ReplicateInstantId;
+use App\AI\Art\ReplicatePhotomakerStyle;
 use App\AI\Art\ReplicateSdxlLightning4Step;
 use App\AI\GenerateAIStatuses;
 use App\Models\Image;
@@ -15,7 +16,6 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
-use OpenAI\Contracts\ClientContract;
 
 class GenerateImage implements ShouldQueue
 {
@@ -40,7 +40,7 @@ class GenerateImage implements ShouldQueue
 
         /** @var GenerateImageResult $result */
         if ($this->image->book->additional_data["request"]["character"] ?? null) {
-            $result = retry(1, fn() => app(ReplicateInstantId::class)->create($this->image));
+            $result = retry(1, fn() => app(ReplicatePhotomakerStyle::class)->create($this->image));
         } else {
             $result = retry(1, fn() => app(ReplicateSdxlLightning4Step::class)->create($this->image));
 //            $result = retry(1, fn() => (new DalE3(app(ClientContract::class)))->create($this->image));

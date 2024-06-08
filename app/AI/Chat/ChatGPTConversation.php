@@ -17,11 +17,13 @@ use OpenAI\Responses\Chat\CreateResponse;
 class ChatGPTConversation extends BaseConversation implements ChatConversationInterface
 {
 
+    const MODEL_GPT_4_O = 'gpt-4o';
     const MODEL_GPT_4_0125_PREVIEW = 'gpt-4-0125-preview';
     const MODEL_GPT_3_5_TURBO = 'gpt-3.5-turbo';
 
-    protected string $currentModel = self::MODEL_GPT_4_0125_PREVIEW;
+    protected string $currentModel = self::MODEL_GPT_4_O;
     protected static array $aiModels = [
+        self::MODEL_GPT_4_O            => ["costsPer1K" => ["prompt" => 0.0050, "completion" => 0.0015]],
         self::MODEL_GPT_4_0125_PREVIEW => ["costsPer1K" => ["prompt" => 0.0100, "completion" => 0.0300]],
         self::MODEL_GPT_3_5_TURBO      => ["costsPer1K" => ["prompt" => 0.0005, "completion" => 0.0015]],
     ];
@@ -43,11 +45,10 @@ class ChatGPTConversation extends BaseConversation implements ChatConversationIn
     {
         $this->messages[] = ['role' => 'user', 'content' => $prompt->__toString()];
 
-
         $payload = [
-            'model'    => $this->currentModel,
-//            'model' => 'gpt-4',
-            'messages' => $this->messages,
+            'model'           => $this->currentModel,
+            'response_format' => ["type" => "json_object"],
+            'messages'        => $this->messages,
         ];
 
         \Log::debug("[ChatGPTConversation] Requesting", $payload);
