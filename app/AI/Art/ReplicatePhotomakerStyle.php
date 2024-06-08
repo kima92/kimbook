@@ -46,7 +46,7 @@ class ReplicatePhotomakerStyle
             "input_image" => $imgPath,
             "num_outputs" => 1,
             "guidance_scale" => 5,
-            "style_strength_ratio" => 35,
+            "style_strength_ratio" => 20,
 
             'seed'            => $image->book->additional_data["imageSeed"] ?? null,
         ];

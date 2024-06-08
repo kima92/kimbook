@@ -17,6 +17,8 @@ use App\Enums\BookStatuses;
 use App\Events\BookFailed;
 use App\Events\BookWritten;
 use App\Jobs\GenerateImage;
+use App\Jobs\TranslateBook;
+use App\Jobs\TranslateChapter;
 use App\Models\Book;
 use App\Models\Chapter;
 use App\Models\Image;
@@ -87,23 +89,6 @@ class GenerateBook
 
         // Create the book
         $book->status = BookStatuses::GeneratingImages;
-        $lang = $book->additional_data["request"]["language"] ?? "he";
-        $n = new Niqqud();
-        $tr = new GoogleTranslate($lang, 'en');
-        if ($lang != "en") {
-            $bookTranslated = [$data["title"], $data["description"], $data["tags"]];
-            if (preg_match('/[\x{0590}-\x{05FF}]/u', $data["description"]) === 0) {
-                $bookTranslated = explode("#####", $tr->translate(join("\n#####\n", $bookTranslated)));
-            }
-            $data["title"] = trim($bookTranslated[0]);
-            $data["description"] = trim($bookTranslated[1]);
-            $data["tags"] = trim($bookTranslated[2]);
-            if ($lang == "he") {
-                $data["title"] = $n->handle($data["title"]);
-                $data["description"] = $n->handle($data["description"]);
-                $data["tags"] = $n->handle($data["tags"]);
-            }
-        }
         $book->fill(Arr::only($data, ['title', 'description', 'cover_image', 'tags', 'rating']));
         $book->fill([
             "additional_data->chatGPTUsages" => $this->chatConv->getUsages(),
@@ -111,33 +96,28 @@ class GenerateBook
         ]);
         $book->save();
 
+
+        $lang = $book->additional_data["request"]["language"] ?? "he";
+        $n = new Niqqud();
+        $tr = new GoogleTranslate($lang, 'en');
+        if ($lang != "en") {
+            dispatch(new TranslateBook($book));
+        }
+
         // Create chapters and related images
         $chaptersData = Arr::get($data, 'chapters', []);
         $images = Collection::make();
         foreach ($chaptersData as $i => $chapterData) {
-            Log::debug("[GenerateBook][fromArray] Starting With chapter " . ($i + 1));
-
-            if ($lang != "en") {
-                Log::debug("[GenerateBook][fromArray] Got [{$chapterData["title"]}] {$chapterData["content"]}");
-                $chapterTranslated = [$chapterData["title"], $chapterData["content"]];
-
-                if (preg_match('/[\x{0590}-\x{05FF}]/u', $chapterData["content"]) === 0) {
-                    $chapterTranslated = explode("#####", $tr->translate(join("\n#####\n", $chapterTranslated)));
-                    Log::debug("[GenerateBook][fromArray] Translation response [{$chapterTranslated[0]}] {$chapterTranslated[1]}");
-                }
-                $chapterData["title"] = trim($chapterTranslated[0]);
-                $chapterData["content"] = trim($chapterTranslated[1]);
-                if ($lang == "he") {
-                    $chapterData["title"] = $n->handle($chapterData["title"]);
-                    $chapterData["content"] = $n->handle($chapterData["content"]);
-                }
-            }
+            Log::debug("[GenerateBook][fromArray] Starting With chapter " . ($i + 1) . " Got [{$chapterData["title"]}] {$chapterData["content"]}");
 
             $chapter = new Chapter(Arr::only($chapterData, ['number', 'title', 'content']));
             $chapter->number = $i + 1;
             $chapter->book_id = $book->id;
             $chapter->save();
 
+            if ($lang != "en") {
+                dispatch(new TranslateChapter($chapter));
+            }
 
             $image = new Image();
             $image->book_id = $book->id;
