@@ -103,7 +103,7 @@
         <div class="relative bg-fixed bg-cover bg-no-repeat lg:h-screen" style="min-height: 100%;background-position: 50%; background-image: url('/images/{{ $bgPaths[1] }}');">
             <div class="h-full w-full overflow-hidden bg-[hsla(0,100%,100%,0.85)] dark:bg-[hsla(0,0%,0%,0.90)]">
                 <div class="mb-14">
-                    <x-books-grid :books="$welcomeBooks->splice(1)" />
+                    <x-books-grid :books="$welcomeBooks" />
                 </div>
                 <div class="absolute bottom-3 w-full text-center font-extrabold text-purple-500 mt-10">
                     {{ config("app.name") }} - {{ config("mail.mailers.smtp.username") }}
