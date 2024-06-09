@@ -42,7 +42,7 @@
                         <label for="name">{{ __("Name") }}</label>
                         <input required id="name" name="name" class="mb-4 lg:w-1/4 w-full bg-[hsla(0,0%,100%,0.50)] dark:bg-[hsla(0,0%,100%,0.10)] dark:border-2 rounded dark:border-white  font-medium dark:text-white focus:border-white">
                         <label for="name">{{ __("Description") }}</label>
-                        <textarea name="description" cols="4" maxlength="500" class="mb-4 h-28 lg:w-11/12 w-full bg-[hsla(0,0%,100%,0.50)] dark:bg-[hsla(0,0%,100%,0.10)] dark:border-2 rounded dark:border-white  font-medium dark:text-white focus:border-white"></textarea>
+                        <textarea required name="description" cols="4" maxlength="500" class="mb-4 h-28 lg:w-11/12 w-full bg-[hsla(0,0%,100%,0.50)] dark:bg-[hsla(0,0%,100%,0.10)] dark:border-2 rounded dark:border-white  font-medium dark:text-white focus:border-white"></textarea>
                     </div>
                     <label for="dropzone-file" id="dropzone" class="flex flex-row items-center justify-center lg:w-1/4 w-full h-95 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 dark:hover:bg-bray-800 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600">
                         <div class="flex flex-col items-center justify-center pt-5 pb-6">
@@ -67,7 +67,7 @@
 
             <div class="flex lg:flex-row">
                 <div class="flex flex-row w-full">
-                    * מומלץ לבחור תמונת חצי גוף עליון. תמונה קרובה מידי בה רואים רק פנים תפגע ביצירתיות התוצרים
+                    * מומלץ לבחור תמונת חצי גוף עליון או צילום תקריב של הפנים.
                 </div>
             </div>
         </div>

@@ -1,14 +1,13 @@
-{{--<x-app-layout :bgclass="'bg-gradient-to-b from-slate-900 to-slate-700'">--}}
-<x-app-layout>
 @php
     /** @var \App\Models\Book $book **/
 @endphp
-
+<x-app-layout :title="$book->title">
     <div class="flex flex-col w-11/12">
         <div class="lg:flex lg:flex-row mt-4 gap-4 mx-auto">
             <div class="lg:w-3/5 p-4 dark:bg-[hsla(0,0%,0%,0.70)] bg-[hsla(0,0%,100%,0.50)] dark:text-white rounded-3xl relative lg:max-w-md">
                 <h1 class="self-center bg-gradient-to-br from-purple-400 to-pink-500 dark:to-[rgba(122,90,248,1)] bg-clip-text text-4xl font-semibold text-transparent mb-4">
-                    {{ $book->title }}</h1>
+                    {{ $book->title }}
+                </h1>
                 <h2 class="mt-3 text-lg">{{ $book->user->name }}</h2>
                 <div class="mt-3 flex flex-row">
                     <svg width="22px" height="22px" viewBox="0 -4 20 20"  class="mx-1 inline fill-purple-700 dark:fill-white">
