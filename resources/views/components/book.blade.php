@@ -167,7 +167,7 @@
 
 </script>
 <script type="text/javascript">
-    $("#{{ $id }}").turn({
+    var aaa = $("#{{ $id }}").turn({
         width: {{ $height * $ratio }},
         height: {{ $height }},
         autoCenter: true,

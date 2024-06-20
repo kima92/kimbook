@@ -44,8 +44,8 @@
                             {{ __("Craft Tales with Your Little Storyteller") }}
                         </h1>
 
-                        <h2 class="text-2xl">ברוכים הבאים ל<span class="text-purple-500 font-bold">{{ config("app.name") }}</span>
-                            <x-application-logo class="h-10 w-auto fill-current text-purple-400 inline" />
+                        <h2 class="text-2xl">ברוכים הבאים ל
+                            <x-application-logo class="h-16 w-auto fill-current text-purple-400 inline" />
                         </h2>
                         <h2 class="text-xl">
                             {{ __("Dive into a world of imagination where you and your child collaborate together to create tales that are uniquely yours, complete with beautiful artwork.") }}

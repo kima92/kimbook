@@ -59,7 +59,7 @@
                 </div>
 {{--                <p>דירוג: {{ $book->rating }}</p>--}}
 
-                <div class="lg:absolute bottom-6 mt-6 flex-row">
+                <div class="bottom-6 mt-6 flex-row">
                     <a href="/books/{{$book->uuid}}/next" class="rounded-3xl border-0 mx-2 border-white lg:px-6 px-2 pt-[8px] pb-[8px] text-sm font-medium leading-normal bg-blue-600 text-white transition duration-150 ease-in-out hover:border-blue-200 hover:bg-blue-700 hover:text-blue-200 focus:border-blue-300 focus:text-blue-200 focus:outline-none focus:ring-0 active:border-blue-300 active:text-blue-300">{{ __("Next Story") }}</a>
                     <a href="/dashboard" class="rounded-3xl border-0 border-white mx-2 lg:px-6 px-2  pt-[8px] pb-[8px] text-sm font-medium leading-normal bg-violet-600 text-white transition duration-150 ease-in-out hover:border-blue-200 hover:bg-violet-700 hover:text-violet-200 focus:border-violet-300 focus:text-violet-200 focus:outline-none focus:ring-0 active:border-violet-300 active:text-violet-300">{{ __("Write New Story") }}</a>
                 </div>

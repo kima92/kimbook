@@ -53,10 +53,10 @@ $splitPages = array_chunk($data, 2);
             @if($page["image"] ?? null)
                 <div style=" overflow: hidden; background-size: cover;   background-repeat: no-repeat;
                             height: 100%;padding: 30px;background-image: url('{{$page["image"]}}');">
-                    <x-application-logo style="margin-right:-1.5rem; margin-top: -1.5rem;width:5rem;height:5rem;fill:currentColor;color:rgb(107 33 168);--tw-text-opacity:1;" class="w-20 h-20 fill-current text-purple-800 dark:text-purple-400" />
+                    <x-application-logo strokewidth="45" style="margin-right:-1rem; margin-top: -1rem;width:6rem;height:6rem;fill:currentColor;color:rgb(107 33 168);--tw-text-opacity:1;" class="w-48 h-48 fill-current text-purple-800 dark:text-purple-400" />
             @endif
             @if($page["title"] ?? null)
-                        <div><h3 style="text-align: center; font-size: 3rem; line-height: 1.25;
+                        <div><h3 style="text-align: center; font-size: 3rem; line-height: 1.25;    margin-top: -2em;
                             direction: rtl; -webkit-text-stroke-color: #FFFFFF; -webkit-text-stroke-width: 1px">{{ $page["title"] }}</h3>
                         </div>
             @endif

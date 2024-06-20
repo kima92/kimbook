@@ -12,7 +12,7 @@
 
                     </div>
                     <a href="/">
-                        <x-application-logo class="block h-20 w-auto fill-current text-purple-800" />
+                        <img src="/images/logo-min.png" class=" h-16 w-auto">
                     </a>
                 </div>
 
