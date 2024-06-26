@@ -41,50 +41,35 @@
                         <x-dark-mode></x-dark-mode>
 
                         <h1 class="self-center bg-gradient-to-br from-purple-400 to-pink-500 dark:to-[rgba(122,90,248,1)] bg-clip-text text-6xl md:text-8xl font-semibold text-transparent">
-                            {{ __("Craft Tales with Your Little Storyteller") }}
+                            <a href="#create-book">{{ __("Craft Tales with Your Little Storyteller") }}</a>
                         </h1>
 
                         <h2 class="text-2xl">ברוכים הבאים ל
                             <x-application-logo class="h-16 w-auto fill-current text-purple-400 inline" />
                         </h2>
-                        <h2 class="text-xl">
+                        <h2 class="text-xl mb-2">
                             {{ __("Dive into a world of imagination where you and your child collaborate together to create tales that are uniquely yours, complete with beautiful artwork.") }}
                         </h2>
 
-                        <div class="flex lg:flex-col flex-col-reverse">
-                            <div class="lg:flex flex-col mt-4 text-start text-lg gap-4">
-                                <div>
-                                    <div class="grid lg:grid-cols-3 grid-cols-1 gap-5 lg:gap-6 lg:mt-16 mt-10 justify-items-center lg:w-3/4 mx-auto">
-                                        @foreach([
-        ["text" => __("Customized books for with unlimited ideas"), "color" => "", "image" => "/images/endless-options.png"],
-        ["text" => __("Seeking Fun or a Lesson? Let Us Assist!")  , "color" => "", "image" => "/images/learn-or-fun.png"],
-        ["text" => __("Super lazy? Explore stories of other kids"), "color" => "", "image" => "/images/sloth.png"]
-        ] as $data)
-                                            <div class="
-                                         relative w-60 h-60 bg-pink-200 flex justify-center items-center2 rounded-full p-5
-                                         before:absolute before:inset-0 before:bg-[linear-gradient(315deg,#03a9f4,#8055a6,#c0005e)] before:rounded-[2rem]
-                                         after:absolute   after:inset-0  after:bg-[linear-gradient(315deg,#03a9f4,#8055a6,#c0005e)]  after:blur-[30px]
-                                         ">
-                                                <b class="z-10 rounded-[2rem] absolute inset-1.5 bg-white/90 dark:bg-black/90"></b>
-                                                @if($data["image"])<img class="absolute z-20 w-2/3 h-2/3 top-4" src="{{ $data["image"] }}">@endif
-                                                <div class="p-4 z-20 absolute flex flex-col items-center bottom-4">
-                                                    <p class="dark:text-white text-blue-600 text-center font-extrabold leading-none uppercase">{{ $data["text"] }}</p>
-                                                </div>
-                                            </div>
-                                        @endforeach
-                                    </div>
-                                </div>
-                                <div class="lg:w-2/3">
-                                    {{--                                <x-book :pages="$welcomeBooks->first()->toBookArray()"></x-book>--}}
-                                </div>
-                            </div>
+                        @guest
+                            @php($lf = \App\Utils\LimitedFeature::forCreateBook())
+                            <span class="text-purple-400">יצרת {{ $lf->getCurrent() }}/{{ $lf->getMax() }} ספרים בחינם.</span>
+                        @if ($lf->isAllowed())
+                            <x-create-book :withoutCharacters="true" :withoutIsAdult="true" :withoutLanguage="true"></x-create-book>
+                            @else
+                                <span class="text-purple-400">נא להרשם כדי לקבל קרדיטים לספרים נוספים.</span>
+                            @endif
+                        @endguest
 
+                        <div class="flex lg:flex-col flex-col-reverse">
                             <div class="flex lg:flex-row flex-col lg:gap-4 justify-center">
+                                @auth
                                 <form action="/dashboard" method="get">
                                     <button type="submit" class="mt-4 bg-purple-900 rounded-3xl px-[46px] pt-[14px] pb-[12px] text-sm font-medium uppercase leading-normal text-purple-100 transition duration-150 ease-in-out hover:border-purple-700 hover:bg-purple-700 2hover:bg-opacity-10 hover:text-purple-100 focus:border-purple-700 focus:text-purple-100 focus:outline-none focus:ring-0 active:border-purple-600 active:text-purple-100">
                                         {{ __("Begin Your Adventure") }}
                                     </button>
                                 </form>
+                                @endauth
                                 @guest
                                     <form action="/register" method="get">
                                         <button type="submit" class="mt-4 bg-purple-900 rounded-3xl px-[46px] pt-[14px] pb-[12px] text-sm font-medium uppercase leading-normal text-purple-100 transition duration-150 ease-in-out hover:border-purple-700 hover:bg-purple-700 2hover:bg-opacity-10 hover:text-purple-100 focus:border-purple-700 focus:text-purple-100 focus:outline-none focus:ring-0 active:border-purple-600 active:text-purple-100">
@@ -104,6 +89,29 @@
             <div class="h-full w-full overflow-hidden bg-[hsla(0,100%,100%,0.85)] dark:bg-[hsla(0,0%,0%,0.90)]">
                 <div class="mb-14">
                     <x-books-grid :books="$welcomeBooks" />
+                </div>
+                <div class="lg:flex flex-col mt-4 text-start text-lg gap-4 mb-14">
+                    <div>
+                        <div class="grid lg:grid-cols-3 grid-cols-1 gap-5 lg:gap-6 lg:mt-16 mt-10 justify-items-center lg:w-3/4 mx-auto">
+                            @foreach([
+["text" => __("Customized books for with unlimited ideas"), "color" => "", "image" => "/images/endless-options.png"],
+["text" => __("Seeking Fun or a Lesson? Let Us Assist!")  , "color" => "", "image" => "/images/learn-or-fun.png"],
+["text" => __("Super lazy? Explore stories of other kids"), "color" => "", "image" => "/images/sloth.png"]
+] as $data)
+                                <div class="
+                                         relative w-60 h-60 bg-pink-200 flex justify-center items-center2 rounded-full p-5
+                                         before:absolute before:inset-0 before:bg-[linear-gradient(315deg,#03a9f4,#8055a6,#c0005e)] before:rounded-[2rem]
+                                         after:absolute   after:inset-0  after:bg-[linear-gradient(315deg,#03a9f4,#8055a6,#c0005e)]  after:blur-[30px]
+                                         ">
+                                    <b class="z-10 rounded-[2rem] absolute inset-1.5 bg-white/90 dark:bg-black/90"></b>
+                                    @if($data["image"])<img class="absolute z-20 w-2/3 h-2/3 top-4" src="{{ $data["image"] }}">@endif
+                                    <div class="p-4 z-20 absolute flex flex-col items-center bottom-4">
+                                        <p class="dark:text-white text-blue-600 text-center font-extrabold leading-none uppercase">{{ $data["text"] }}</p>
+                                    </div>
+                                </div>
+                            @endforeach
+                        </div>
+                    </div>
                 </div>
                 <div class="absolute bottom-3 w-full text-center font-extrabold text-purple-500 mt-10">
                     {{ config("app.name") }} - {{ config("mail.mailers.smtp.username") }}

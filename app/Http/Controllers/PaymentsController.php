@@ -25,7 +25,7 @@ class PaymentsController extends Controller
         $payment->credits = $plan['amount'];
         $data = [
             "seller_payme_id"   => config("services.payme.api_key"),
-            'product_name'      => 'טעינת קרדיטים',
+            'product_name'      => "טעינת {$plan['amount']} קרדיטים",
             'sale_price'        => $payment->price * 100,
             'currency'          => 'ILS',
 //            'transaction_id'    => $payment->uuid,
@@ -42,7 +42,7 @@ class PaymentsController extends Controller
 
             event(new PaymentCompleted($payment));
 
-            return \redirect("/credits");
+            return \redirect("/credits?auth-number={$response->json("payme_transaction_auth_number")}"); // TODO: Ref payment?
         }
 
         $response = Http::asJson()->post(config("services.payme.url")."/api/generate-sale", $data + [

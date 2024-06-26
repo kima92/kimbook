@@ -21,6 +21,7 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('welcome');
 });
+Route::post('/books', [BookController::class, "store"]);
 Route::get('/books/{uuid}', [BookController::class, "show"]);
 Route::put('/books/{uuid}', [BookController::class, "update"]);
 Route::get('/books/{uuid}/slim', [BookController::class, "showSlim"]);
@@ -30,7 +31,6 @@ Route::get('/books/{uuid}/next', [BookController::class, "next"])->middleware(['
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/dashboard', fn() => view('dashboard'))->name('dashboard');
     Route::get('/books', [BookController::class, "index"])->name('books');
-    Route::post('/books', [BookController::class, "store"]);
     Route::get('/characters', [CharactersController::class, "index"])->name('characters');
     Route::post('/characters', [CharactersController::class, "store"])->name('characters-store');
     Route::get('/credits', [CreditsController::class, "index"])->name('credits');

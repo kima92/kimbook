@@ -9,8 +9,10 @@ use App\Jobs\StartGeneratingBook;
 use App\Models\Book;
 use App\Models\Reading;
 use App\Models\User;
+use App\Utils\LimitedFeature;
 use Barryvdh\DomPDF\PDF;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 use Log;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -104,14 +106,24 @@ class BookController extends Controller
     {
         Log::debug("[BookController][store] Got new request");
 
-        $balance = \Auth::user()->credits()->sum("amount");
-        if ($balance - config('credits.amounts.book') < 0) {
-            return response()->json([
-                "error_message" => "אין מספיק קרדיטים ליצירת סיפור חדש ({$balance})"
-            ], Response::HTTP_PAYMENT_REQUIRED);
+        $lf = null;
+        if (\Auth::user()) {
+            $balance = \Auth::user()->credits()->sum("amount");
+            if ($balance < config('credits.amounts.book')) {
+                return response()->json([
+                    "error_message" => "אין מספיק קרדיטים ליצירת סיפור חדש ({$balance})"
+                ], Response::HTTP_PAYMENT_REQUIRED);
+            }
+        } else {
+            $lf = LimitedFeature::forCreateBook();
+            if (!$lf->isAllowed()) {
+                return response()->json([
+                    "error_message" => "נא להרשם לשירות"
+                ], Response::HTTP_PAYMENT_REQUIRED);
+            }
         }
 
-        $request->mergeIfMissing(["isAdultReader" => false, "moral" => "none"]);
+        $request->mergeIfMissing(["isAdultReader" => false, "moral" => "none", "language" => "he"]);
 
         // Minimum prompt word count
 
@@ -128,12 +140,19 @@ class BookController extends Controller
             "imageSeed" => rand(1, 99999999),
         ];
         $book->tags = "";
-        $book->user()->associate($request->user());
+
+        $user = $request->user() ?? User::firstOrCreate(['email' => "anonimous@sipuron.co.il"], [
+            'name' => "משתמש אנונימי",
+            'password' => Hash::make(123456789),
+        ]);
+        $book->user()->associate($user);
 
         $book->save();
 
         event(new BookCreated($book));
         dispatch(new StartGeneratingBook($book));
+
+        $lf?->incr();
 
         return response()->json(["uuid" => $book->uuid]);
     }
