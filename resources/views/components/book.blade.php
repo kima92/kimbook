@@ -1,4 +1,5 @@
 @props(['pages', 'height' => 500, 'ratio' => 2])
+<span class="text-gray-500 text-sm mb-4">למעבר בין הדפים ניתן ללחוץ על פינות הספר, או למשוך אותן כמו ספר אמיתי!</span>
 <div id="{{ $id = Str::random(8) }}" {{ $attributes->merge(['class' => 'sample-flipbook hidden lg:block']) }}>
     @foreach ((array) $pages as $i => $page)
         <div @class(['hard' => $page["isCover"] ?? false])>
@@ -75,9 +76,6 @@
 
             .dot {
                 cursor: pointer;
-                height: 10px;
-                width: 10px;
-                transition: background-color 0.2s ease;
             }
         }
     }
@@ -121,8 +119,9 @@
         // Insert dots into the DOM
         items.forEach((_, index) => {
             let dot = document.createElement("span");
-            dot.classList.add("dot", "bg-gray-500", "dark:bg-gray-300");
-            if (index === 0) dot.classList.add("active", "bg-purple-500", "dark:bg-purple-500");
+            dot.classList.add("dot", "text-gray-500", "dark:text-gray-300");
+            dot.innerText = index+1;
+            if (index === 0) dot.classList.add("active", "text-purple-500", "dark:text-purple-500");
             dot.dataset.index = index;
             dotsContainer.appendChild(dot);
         });
@@ -133,10 +132,10 @@
         function showItem(index) {
             items.forEach((item, idx) => {
                 item.classList.remove("active");
-                dots[idx].classList.remove("active", "bg-purple-500", "dark:bg-purple-500");
+                dots[idx].classList.remove("active", "text-purple-500", "dark:text-purple-500");
                 if (idx === index) {
                     item.classList.add("active");
-                    dots[idx].classList.add("active", "bg-purple-500", "dark:bg-purple-500");
+                    dots[idx].classList.add("active", "text-purple-500", "dark:text-purple-500");
                 }
             });
         }

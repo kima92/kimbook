@@ -90,6 +90,11 @@
                 <div class="mb-14">
                     <x-books-grid :books="$welcomeBooks" />
                 </div>
+            </div>
+        </div>
+        <div class="relative bg-fixed bg-cover bg-no-repeat lg:h-min-96 h-fit" style="min-height: 100%;background-position: 50%; background-image: url('/images/{{ $bgPaths[1] }}');">
+            <div class="lg:h-96 h-fit w-full overflow-hidden bg-[hsla(0,100%,100%,0.85)] dark:bg-[hsla(0,0%,0%,0.90)]">
+
                 <div class="lg:flex flex-col mt-4 text-start text-lg gap-4 mb-14">
                     <div>
                         <div class="grid lg:grid-cols-3 grid-cols-1 gap-5 lg:gap-6 lg:mt-16 mt-10 justify-items-center lg:w-3/4 mx-auto">
