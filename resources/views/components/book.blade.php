@@ -1,5 +1,5 @@
 @props(['pages', 'height' => 500, 'ratio' => 2])
-<span class="text-gray-500 text-sm mb-4">למעבר בין הדפים ניתן ללחוץ על פינות הספר, או למשוך אותן כמו ספר אמיתי!</span>
+<span class="text-gray-500 text-sm mb-4 hidden lg:block">למעבר בין הדפים ניתן ללחוץ על פינות הספר, או למשוך אותן כמו ספר אמיתי!</span>
 <div id="{{ $id = Str::random(8) }}" {{ $attributes->merge(['class' => 'sample-flipbook hidden lg:block']) }}>
     @foreach ((array) $pages as $i => $page)
         <div @class(['hard' => $page["isCover"] ?? false])>
