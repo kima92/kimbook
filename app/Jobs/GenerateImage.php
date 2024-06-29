@@ -16,6 +16,8 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\Log;
+use Stichoza\GoogleTranslate\GoogleTranslate;
 
 class GenerateImage implements ShouldQueue
 {
@@ -36,7 +38,9 @@ class GenerateImage implements ShouldQueue
      */
     public function handle(): void
     {
-        \Log::debug("[GenerateImage][handle] Got image {$this->image->id} with prompt '{$this->image->prompt}'");
+        Log::debug("[GenerateImage][handle] Got image {$this->image->id} with prompt '{$this->image->prompt}'");
+
+        $this->translatePromptToEnglish();
 
         /** @var GenerateImageResult $result */
         if ($this->image->book->additional_data["request"]["character"] ?? null) {
@@ -48,6 +52,22 @@ class GenerateImage implements ShouldQueue
 
         if ($result->status == GenerateAIStatuses::Completed) {
             (new DownloadImageFromUrl())->execute($this->image, $result->images[0]);
+        }
+    }
+
+    /**
+     * @return void
+     * @throws \Stichoza\GoogleTranslate\Exceptions\LargeTextException
+     * @throws \Stichoza\GoogleTranslate\Exceptions\RateLimitException
+     * @throws \Stichoza\GoogleTranslate\Exceptions\TranslationRequestException
+     */
+    protected function translatePromptToEnglish(): void
+    {
+        if (preg_match('/[\x{0590}-\x{05FF}]/u', $this->image->prompt) === 0) {
+            $tr                  = new GoogleTranslate('en', 'he');
+            $this->image->prompt = $tr->translate($this->image->prompt);
+            $this->image->save();
+            Log::debug("[GenerateImage][handle] Translation response {$this->image->prompt}");
         }
     }
 }
