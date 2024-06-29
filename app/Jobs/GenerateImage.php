@@ -63,7 +63,7 @@ class GenerateImage implements ShouldQueue
      */
     protected function translatePromptToEnglish(): void
     {
-        if (preg_match('/[\x{0590}-\x{05FF}]/u', $this->image->prompt) === 0) {
+        if (preg_match('/[\x{0590}-\x{05FF}]/u', $this->image->prompt) === 1) {
             $tr                  = new GoogleTranslate('en', 'he');
             $this->image->prompt = $tr->translate($this->image->prompt);
             $this->image->save();
