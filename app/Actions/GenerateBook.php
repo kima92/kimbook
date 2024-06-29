@@ -12,6 +12,7 @@ use App\AI\Art\DalE3;
 use App\AI\Art\ReplicateInstantId;
 use App\AI\Chat\ChatConversationInterface;
 use App\AI\GenerateAIStatuses;
+use App\AI\Prompts\GenerateBookSystemPrompt;
 use App\AI\Prompts\RawPrompt;
 use App\Enums\BookStatuses;
 use App\Events\BookFailed;
@@ -21,6 +22,7 @@ use App\Jobs\TranslateBook;
 use App\Jobs\TranslateChapter;
 use App\Models\Book;
 use App\Models\Chapter;
+use App\Models\Character;
 use App\Models\Image;
 use Illuminate\Bus\Batch;
 use Illuminate\Database\Eloquent\Collection;
@@ -171,26 +173,24 @@ class GenerateBook
             "1|9-12" => ["sentences" => "7-15",  "pages" => "11-15"],
         };
 
-        $replacements = [
-            ":Language:"             => match ($this->chatConv->isSupportedLanguage($request["language"]) ? $request["language"] : "en") {
+        $characterId = $book->additional_data["request"]["character"] ?? null;
+        $character = $characterId ? Character::find($characterId) : null;
+
+        return new GenerateBookSystemPrompt(
+            match ($this->chatConv->isSupportedLanguage($request["language"]) ? $request["language"] : "en") {
                 "en" => "English",
                 "he" => "Hebrew",
             },
-            ":MainMoral:"            => $request["moral"],
-            ":ArtStyle:"             => match ($request["art-style"] ?? null) {
+            match ($request["art-style"] ?? null) {
                 "random", null  => Arr::random(["Walt Disney", "Anime", "Dreamworks", "Pixar"]),
                 "asked-in-text" => "as user describe in input",
                 default         => $request["art-style"]
             },
-            ":SentencesInPageRange:" => $chapters["sentences"],
-            ":PagesRange:"           => $chapters["pages"],
-            ":CharacterInfo"         => $book->additional_data["request"]["character"] ?? null ? "User defined character: :CharacterName:, :CharacterInfo:" : ""
-        ];
-
-        return str_replace(
-            array_keys($replacements),
-            array_values($replacements),
-                config("prompts.generate-tale." . get_class($this->chatConv)) ?? config("prompts.generate-tale.default")
+            $request["moral"],
+            $request["age"],
+            $character,
+            $chapters["sentences"],
+            $chapters["pages"]
         );
     }
 

@@ -28,7 +28,7 @@ class ChatGPTConversation extends BaseConversation implements ChatConversationIn
         self::MODEL_GPT_3_5_TURBO      => ["costsPer1K" => ["prompt" => 0.0005, "completion" => 0.0015]],
     ];
 
-    protected array $supportedLanguages = ["en"];
+    protected array $supportedLanguages = ["en", "he"];
 
     public function __construct(protected ClientContract $gptClient) { }
 
