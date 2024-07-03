@@ -63,12 +63,17 @@
         </div>
         <!-- Google tag (gtag.js) -->
         <script async src="https://www.googletagmanager.com/gtag/js?id=G-RKGVRPNJWV"></script>
+        <script async src="https://www.googletagmanager.com/gtag/js?id=G-659D4PFD86&l=dataLayer2"></script>
         <script>
             window.dataLayer = window.dataLayer || [];
             function gtag(){dataLayer.push(arguments);}
             gtag('js', new Date());
+            gtag('config', 'G-659D4PFD86');
 
-            gtag('config', 'G-RKGVRPNJWV');
+            window.dataLayer2 = window.dataLayer2 || [];
+            function gtag2(){dataLayer2.push(arguments);}
+            gtag2('js', new Date());
+            gtag2('config', 'G-RKGVRPNJWV');
         </script>
         <script>
             nagishli_config = {
