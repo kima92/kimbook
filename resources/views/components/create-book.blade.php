@@ -55,6 +55,11 @@
             <option class="dark:bg-black" value="random">אקראי</option>
         </select>
         @endif
+
+        {{--Email--}}
+        @guest
+        <input type="email" name="email" required placeholder="אימייל" class="bg-[hsla(0,0%,100%,0.50)] dark:bg-[hsla(0,0%,100%,0.05)] dark:border-2 rounded dark:border-white focus:border-white w-full lg:w-1/6"/>
+        @endguest
     </div>
 
     @if(!$withoutCharacters && Auth::user()?->characters?->isNotEmpty())

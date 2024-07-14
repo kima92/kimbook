@@ -136,7 +136,7 @@ class BookController extends Controller
         $book->uuid = \Str::uuid()->toString();
         $book->publication_date = now();
         $book->additional_data = [
-            "request" => $request->only(["age", "moral", "isAdultReader", "language", "pictures", "art-style", "character"]),
+            "request" => $request->only(["age", "moral", "isAdultReader", "language", "pictures", "art-style", "character", "email"]),
             "imageSeed" => rand(1, 99999999),
         ];
         $book->tags = "";

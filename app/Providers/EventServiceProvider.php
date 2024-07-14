@@ -3,11 +3,11 @@
 namespace App\Providers;
 
 use App\Listeners\CreditsListener;
+use App\Listeners\EmailNotificationsListener;
 use App\Listeners\TelegramNotificationsListener;
 use App\Utils\Telegram;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
-use Illuminate\Contracts\Queue\Job;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
 use Illuminate\Queue\Events\JobExceptionOccurred;
 use Illuminate\Queue\Events\JobFailed;
@@ -35,6 +35,7 @@ class EventServiceProvider extends ServiceProvider
     protected $subscribe = [
         TelegramNotificationsListener::class,
         CreditsListener::class,
+        EmailNotificationsListener::class,
     ];
 
     /**

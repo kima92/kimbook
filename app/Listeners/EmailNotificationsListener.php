@@ -9,7 +9,13 @@ class EmailNotificationsListener
 {
     public function handleBookCompleted(BookCompleted $event)
     {
-        Mail::to($event->book->user)->send(new \App\Mail\BookCompleted($event->book));
+        \Log::info("[EmailNotificationsListener][handleBookCompleted] Notifying email about book completed", [
+            "email" => $event->book->additional_data["request"]["email"] ?? $event->book->user->email,
+        ]);
+
+        Mail::to(
+            $event->book->additional_data["request"]["email"] ?? $event->book->user
+        )->send(new \App\Mail\BookCompleted($event->book));
     }
 
     /**

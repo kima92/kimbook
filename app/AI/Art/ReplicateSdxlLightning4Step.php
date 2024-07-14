@@ -45,10 +45,12 @@ class ReplicateSdxlLightning4Step
             'disable_safety_checker' => true
         ];
 
-        Log::debug("[ReplicateSdxlLightning4Step][create] Requesting ", $input + ["version" => $version]);
+        $webhook = config("app.url") . "/api/replicate/sdxl-lightning-4step/{$image->book->uuid}/{$image->id}";
+
+        Log::debug("[ReplicateSdxlLightning4Step][create] Requesting ", $input + ["version" => $version, "webhook" => $webhook]);
 
         $response = $this->client->predictions()
-            ->withWebhook(config("app.url") . "/api/replicate/sdxl-lightning-4step/{$image->book->uuid}/{$image->id}")
+            ->withWebhook($webhook)
             ->create($version, $input);
 
         Log::debug("[ReplicateSdxlLightning4Step][create] Got response for prompt {$prompt}", (array) $response);

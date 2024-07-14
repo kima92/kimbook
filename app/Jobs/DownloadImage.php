@@ -2,11 +2,9 @@
 
 namespace App\Jobs;
 
-use App\Actions\GenerateBook;
-use App\Models\Book;
+use App\Actions\CheckCompleteBook;
 use App\Models\Image;
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldBeUnique;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
@@ -34,5 +32,7 @@ class DownloadImage implements ShouldQueue
 
         $this->image->image_url = "/storage/images/{$uuid}.png";
         $this->image->save();
+
+        (new CheckCompleteBook())->execute($this->image->book);
     }
 }

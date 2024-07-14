@@ -16,13 +16,18 @@ class CheckCompleteBook
 {
     public function execute(Book $book): void
     {
+        if ($book->status == BookStatuses::Ready) {
+            return;
+        }
+
         if ($book->images()->whereNull("image_url")->first()) {
             // Not all images have path, means it callback implementation...?
             return;
         }
 
-        $book->status = BookStatuses::Ready;
-        $book->save();
-        event(new BookCompleted($book));
+        if (Book::query()->whereKey($book->id)->toBase()->update(["status" => BookStatuses::Ready])) {
+            \Log::info("[CheckCompleteBook][execute] ");
+            event(new BookCompleted($book));
+        }
     }
 }
