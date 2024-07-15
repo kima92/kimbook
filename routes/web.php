@@ -32,7 +32,7 @@ Route::get('/auth/redirect', function () {
     return Socialite::driver('google')->redirect();
 });
 
-Route::get('/auth/callback', function () {
+Route::get('/oauth', function () {
     $user = Socialite::driver('google')->user();
 
     \Symfony\Component\VarDumper\VarDumper::dump([
