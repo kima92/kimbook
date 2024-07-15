@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\BookController;
 use App\Http\Controllers\CharactersController;
 use App\Http\Controllers\CreditsController;
@@ -28,29 +29,8 @@ Route::get('/books/{uuid}/slim', [BookController::class, "showSlim"]);
 Route::get('/books/{uuid}/print', [BookController::class, "print"]);
 Route::get('/books/{uuid}/next', [BookController::class, "next"])->middleware(['auth', 'verified']);
 
-Route::get('/auth/redirect', function () {
-    return Socialite::driver('google')->redirect();
-});
-
-Route::get('/oauth', function () {
-    $user = Socialite::driver('google')->user();
-
-    \Symfony\Component\VarDumper\VarDumper::dump([
-        "user" => $user,
-        "id" => $user->getId(),
-        "nickname" => $user->getNickname(),
-        "name" => $user->getName(),
-        "email" => $user->getEmail(),
-        "avatar" => $user->getAvatar(),
-        "token" => $user->token,
-    ]);
-    // $user->token
-//    $user->getId();
-//    $user->getNickname();
-//    $user->getName();
-//    $user->getEmail();
-//    $user->getAvatar();
-});
+Route::get('/oauth/redirect', fn() => Socialite::driver('google')->redirect());
+Route::get('/oauth', [RegisteredUserController::class, "oauth"]);
 
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/dashboard', fn() => view('dashboard'))->name('dashboard');

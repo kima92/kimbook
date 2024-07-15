@@ -6,14 +6,41 @@ use App\Http\Controllers\Controller;
 use App\Models\User;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Auth\Events\Registered;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules;
+use Socialite;
+
 //use Lunaweb\RecaptchaV3\Facades\RecaptchaV3;
 
 class RegisteredUserController extends Controller
 {
+    /**
+     * Display the Google login view.
+     *
+     * @return RedirectResponse
+     */
+    public function oauth(): RedirectResponse
+    {
+        $userData = Socialite::driver('google')->user();
+
+        $user = User::firstWhere("email", $userData->getEmail()) ??
+                User::create([
+                    'name'              => $userData->getName(),
+                    'email'             => $userData->getEmail(),
+                    'password'          => Hash::make(\Illuminate\Support\Str::uuid()->toString()),
+                    'email_verified_at' => now(),
+                ]);
+
+        event(new Registered($user));
+
+        Auth::login($user);
+
+        return redirect(RouteServiceProvider::HOME);
+    }
+
     /**
      * Display the registration view.
      *

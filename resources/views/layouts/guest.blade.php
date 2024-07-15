@@ -22,6 +22,53 @@
                 y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
             })(window, document, "clarity", "script", "m1krx3jy7p");
         </script>
+        <style>
+            .google-btn {
+                display: inline-block;
+                background: white;
+                color: #444;
+                width: 190px;
+                height: 42px;
+                border-radius: 5px;
+                box-shadow: 0 3px 4px 0 rgba(0, 0, 0, .25);
+                transition: all 0.2s ease-in-out;
+                text-decoration: none;
+                text-align: center;
+                line-height: 42px;
+                font-size: 16px;
+            }
+
+            .google-btn:hover {
+                box-shadow: 0 0 6px #4285f4;
+            }
+
+            .google-icon-wrapper {
+                position: absolute;
+                margin-top: 1px;
+                margin-left: 1px;
+                width: 40px;
+                height: 40px;
+                border-radius: 2px;
+                background-color: #fff;
+            }
+
+            .google-icon {
+                position: absolute;
+                margin-top: 11px;
+                margin-left: 11px;
+                width: 18px;
+                height: 18px;
+            }
+
+            .btn-text {
+                display: inline-block;
+                vertical-align: middle;
+                padding-left: 42px;
+                padding-right: 42px;
+                font-weight: bold;
+                font-size: 14px;
+            }
+        </style>
 {{--        {!! RecaptchaV3::initJs() !!}--}}
     </head>
     <body class="font-sans text-gray-900 antialiased">
