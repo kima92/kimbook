@@ -47,4 +47,11 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
+Route::get('/login-anon', function () {
+    \Illuminate\Support\Facades\Auth::login(\App\Models\User::query()->firstWhere("email", "anonimous@sipuron.co.il"));
+
+    return redirect('/dashboard');
+});
+
+
 require __DIR__.'/auth.php';
