@@ -55,4 +55,10 @@ return [
         'api_key' => env('PAYME_API_KEY'),
         'url'     => env('PAYME_URL', 'https://live.payme.io'),
     ],
+
+    'google' => [
+        'client_id' => env('GOOGLE_CLIENT_ID'),
+        'client_secret' => env('GOOGLE_CLIENT_SECRET'),
+        'redirect' => env("APP_URL") . env('GOOGLE_REDIRECT_URI')
+    ],
 ];

@@ -50,6 +50,9 @@
                         <h2 class="text-xl mb-2">
                             {{ __("Dive into a world of imagination where you and your child collaborate together to create tales that are uniquely yours, complete with beautiful artwork.") }}
                         </h2>
+                        <h2 class="text-xl mb-2">
+                            {{ __("Your face, your character! Register and become a superhero in a minute!") }}
+                        </h2>
 
                         @guest
                             @php($lf = \App\Utils\LimitedFeature::forCreateBook())

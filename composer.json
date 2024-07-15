@@ -12,9 +12,11 @@
         "fruitcake/laravel-cors": "^2.0",
         "guzzlehttp/guzzle": "^7.0.1",
         "laravel/framework": "^8.0",
+        "laravel/socialite": "^5.15",
         "laravel/tinker": "^2.5",
         "openai-php/client": "^v0.8.0",
         "paymeservice/remotisan": "^1.7",
+        "socialiteproviders/google": "^4.1",
         "stichoza/google-translate-php": "^5.1",
         "symfony/css-selector": "^6.0"
     },
