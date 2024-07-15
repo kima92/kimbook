@@ -26,15 +26,16 @@ class RegisteredUserController extends Controller
     {
         $userData = Socialite::driver('google')->user();
 
-        $user = User::firstWhere("email", $userData->getEmail()) ??
-                User::create([
-                    'name'              => $userData->getName(),
-                    'email'             => $userData->getEmail(),
-                    'password'          => Hash::make(\Illuminate\Support\Str::uuid()->toString()),
-                    'email_verified_at' => now(),
-                ]);
+        if (!$user = User::firstWhere("email", $userData->getEmail())) {
+            $user = User::create([
+                'name'              => $userData->getName(),
+                'email'             => $userData->getEmail(),
+                'password'          => Hash::make(\Illuminate\Support\Str::uuid()->toString()),
+                'email_verified_at' => now(),
+            ]);
 
-        event(new Registered($user));
+            event(new Registered($user));
+        }
 
         Auth::login($user);
 
