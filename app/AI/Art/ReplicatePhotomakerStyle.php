@@ -32,6 +32,12 @@ class ReplicatePhotomakerStyle
             Log::debug("[ReplicatePhotomakerStyle][create] fixing from '{$prompt}' to '{$image->prompt}'");
             $image->save();
         }
+        if ($prompt->substrCount("image") > 1) {
+            $placeholder = Str::uuid()->toString();
+            $image->prompt = $prompt->replaceFirst("img", $placeholder)->remove("img")->replace($placeholder, "img");
+            Log::debug("[ReplicatePhotomakerStyle][create] fixing from '{$prompt}' to '{$image->prompt}'");
+            $image->save();
+        }
 
         $version = '467d062309da518648ba89d226490e02b8ed09b5abc15026e54e31c5a8cd0769';
 

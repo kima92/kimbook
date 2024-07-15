@@ -62,17 +62,54 @@
         @endguest
     </div>
 
-    @if(!$withoutCharacters && Auth::user()?->characters?->isNotEmpty())
         <div class="lg:mt-3 mt-1 flex flex-col lg:flex-row lg:justify-center lg:gap-3 gap-y-1">
-            <select name="character" class="bg-[hsla(0,0%,100%,0.50)] dark:bg-[hsla(0,0%,100%,0.05)] dark:border-2 rounded dark:border-white focus:border-white w-full lg:w-1/6">
-                <option class="dark:bg-black" disabled selected>-בחר דמות-</option>
-                <option class="dark:bg-black" value="">ללא - המציא דמות חדשה</option>
-                @foreach(Auth::user()->characters as $character)
-                    <option class="dark:bg-black" value="{{$character->id}}">{{$character->name}}</option>
-                @endforeach
-            </select>
+            <div class="flex w-full lg:w-1/6">
+                <button id="characters-button" data-dropdown-toggle="dropdown-characters"
+                        class="flex-shrink-0 z-10 inline-flex items-center py-2.5 px-4 text-sm font-medium text-center border-gray-500 dark:border-white border dark:border-2 bg-[hsla(0,0%,100%,0.50)] dark:bg-[hsla(0,0%,100%,0.05)] rounded focus:border-white w-full"
+                        type="button">
+                    <img id="character-image" src="#" style="display: none; height: 40px;" class="ml-2"/>
+                    <span id="character-name">בחר דמות</span>
+                    <input id="character-id" type="hidden" name="character" value="" />
+                    <svg class="w-2.5 h-2.5 ms-2.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6"><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 4 4 4-4"/></svg>
+                </button>
+                <div id="dropdown-characters" class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-60 lg:w-52 dark:bg-gray-800">
+                    <ul class="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="characters-button">
+                        <li>
+                            <button type="button" class="inline-flex w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-600 dark:hover:text-white"
+                                    onclick="selectCharacter('', '-דמות אקראית-', null)">
+                                <div class="inline-flex items-center">
+                                    -דמות אקראית-
+                                </div>
+                            </button>
+                        </li>
+                        @foreach((Auth::user() ?? \App\Models\User::firstWhere("email", "anonimous@sipuron.co.il") )->characters as $character)
+                        <li>
+                            <button type="button" class="inline-flex w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-600 dark:hover:text-white"
+                            onclick="selectCharacter('{{ $character->id }}', '{{$character->name}}', '{{$character->image_path}}')">
+                                <div class="inline-flex items-center w-full">
+                                    <div class="w-2/5">
+                                        <img src="{{$character->image_path}}" style="height: 60px">
+                                    </div>
+                                    <div class="w-3/5 text-right">
+                                        {{$character->name}}
+                                    </div>
+                                </div>
+                            </button>
+                        </li>
+                        @endforeach
+
+                        <li>
+                            <button type="button" class="inline-flex w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-600 dark:hover:text-white" onclick="location.href = '/characters'">
+                                <div class="inline-flex items-center">
+                                    צור דמות חדשה!
+                                </div>
+                            </button>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
         </div>
-    @endif
     <textarea required minlength="15" id="plot" name="plot" cols="4" maxlength="500" class="mt-4 h-28 bg-[hsla(0,0%,100%,0.50)] dark:bg-[hsla(0,0%,100%,0.10)] dark:border-2 rounded dark:border-white  font-medium dark:text-white focus:border-white"></textarea>
     <x-button class="mt-4 text-center flex items-center justify-center" id="submit" type="submit">
         {{ __("Begin Your Adventure") }}
@@ -205,5 +242,18 @@
             .catch(e => {
                 console.error('There has been a problem with your fetch operation:', e);
             });
+    }
+
+    var dropdownElement = document.getElementById('dropdown-characters');
+
+    const dropdown = new Dropdown(dropdownElement, dropdownElement.previousElementSibling);
+
+    function selectCharacter(id, name, img) {
+        dropdown.hide();
+
+        document.getElementById('character-id').value = id;
+        document.getElementById('character-name').innerText = name;
+        document.getElementById('character-image').src = img;
+        document.getElementById('character-image').style.display = img ? null : 'none';
     }
 </script>

@@ -18,6 +18,9 @@
         <script type="text/javascript" src="/js/turnjs4/turn.min.js"></script>
         <script type="text/javascript" src="/js/turnjs4/zoom.min.js"></script>
 
+        <link href="https://cdn.jsdelivr.net/npm/flowbite@2.4.1/dist/flowbite.min.css" rel="stylesheet" />
+        <script src="https://cdn.jsdelivr.net/npm/flowbite@2.4.1/dist/flowbite.min.js"></script>
+
         {{ \App\Utils\Vite::compile() }}
 
         <script type="text/javascript">
