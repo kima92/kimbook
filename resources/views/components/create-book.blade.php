@@ -82,6 +82,13 @@
                                 </div>
                             </button>
                         </li>
+                        <li>
+                            <button type="button" class="inline-flex w-full px-4 py-2 text-sm text-purple-700 font-extrabold  hover:bg-gray-100 dark:text-purple-500 dark:hover:bg-gray-600 dark:hover:text-purple-400" onclick="location.href = '/characters'">
+                                <div class="inline-flex items-center">
+                                    צור דמות חדשה!
+                                </div>
+                            </button>
+                        </li>
                         @foreach((Auth::user() ?? \App\Models\User::firstWhere("email", "anonimous@sipuron.co.il") )->characters as $character)
                         <li>
                             <button type="button" class="inline-flex w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-600 dark:hover:text-white"
@@ -98,13 +105,6 @@
                         </li>
                         @endforeach
 
-                        <li>
-                            <button type="button" class="inline-flex w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-600 dark:hover:text-white" onclick="location.href = '/characters'">
-                                <div class="inline-flex items-center">
-                                    צור דמות חדשה!
-                                </div>
-                            </button>
-                        </li>
                     </ul>
                 </div>
             </div>
