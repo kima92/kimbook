@@ -32,7 +32,8 @@ Route::get('/books/{uuid}/next', [BookController::class, "next"])->middleware(['
 Route::get('/oauth/redirect', fn() => Socialite::driver('google')->redirect());
 Route::get('/oauth', [RegisteredUserController::class, "oauth"]);
 
-Route::middleware(['auth', 'verified'])->group(function () {
+//Route::middleware(['auth', 'verified'])->group(function () {
+Route::middleware(['auth'])->group(function () {
     Route::get('/dashboard', fn() => view('dashboard'))->name('dashboard');
     Route::get('/books', [BookController::class, "index"])->name('books');
     Route::get('/characters', [CharactersController::class, "index"])->name('characters');
