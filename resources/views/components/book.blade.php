@@ -1,25 +1,33 @@
 @props(['pages', 'height' => 500, 'ratio' => 2])
 <span class="text-gray-500 text-sm mb-4 hidden lg:block">למעבר בין הדפים ניתן ללחוץ על פינות הספר, או למשוך אותן כמו ספר אמיתי!</span>
-<div id="{{ $id = Str::random(8) }}" {{ $attributes->merge(['class' => 'sample-flipbook hidden lg:block']) }}>
-    @foreach ((array) $pages as $i => $page)
-        <div @class(['hard' => $page["isCover"] ?? false])>
-            @if($page["image"] ?? null)<div class="relative overflow-hidden bg-cover bg-no-repeat" style="height: {{ $height }}px;
+<div class="flex flex-row">
+    <div class="content-center hidden lg:block">
+        <img id="previous" class="hover:cursor-pointer hidden" width="100" height="100" src="/images/previous3.png" alt="previous" onclick="prevv()"/>
+    </div>
+    <div id="{{ $id = Str::random(8) }}" {{ $attributes->merge(['class' => 'sample-flipbook hidden lg:block']) }}>
+        @foreach ((array) $pages as $i => $page)
+            <div @class(['hard' => $page["isCover"] ?? false])>
+                @if($page["image"] ?? null)<div class="relative overflow-hidden bg-cover bg-no-repeat" style="height: {{ $height }}px;
                                                                                                           padding: 30px;
                                                                                                           background-image: url('{{$page["image"]}}');
                                                                                                           ">@endif
-                @if($page["title"] ?? null)<div><h3 class="text-center text-5xl leading-tight" style="font-family: 'Secular One', sans-serif;direction: rtl; -webkit-text-stroke-color: #FFFFFF; -webkit-text-stroke-width: 1px">{{ $page["title"] }}</h3></div>@endif
-                <div class="text-2xl h-full flex flex-col gap-2 justify-center justify-items-center text-black" style="direction: rtl; padding: 30px 30px 0 30px; height: 460px">
-                    @foreach(explode("\n", $page["content"] ?? "") as $p)
-                        <p @if($page["image"] ?? null)style="-webkit-text-stroke-color: #FFFFFF; -webkit-text-stroke-width: thin" class="text-4xl" @endif>{{ $p }}</p>
-                    @endforeach
-                </div>
-                @if($page["pageNum"] ?? null)<div class="text-center text-gray-400">-{{$page["pageNum"]}}-</div>@endif
-            @if($page["image"] ?? null)</div>@endif
-            @if($page["isCover"] ?? false)
-                <div class="w-[calc(100%-2rem)] h-full absolute top-0 @if($i == 0) left-0 @else right-0 @endif bottom-0" style="box-shadow: 0 1.1px 1.5px rgba(0,0,0,.4), 0 2.8px 3.9px rgba(0,0,0,.4), 0 5.8px 7.9px rgba(0,0,0,.08), 0 12.0455px 16.4px rgba(0,0,0,.4), 0 33px 45px rgba(0,0,0,.8);"></div>
-            @endif
-        </div>
-    @endforeach
+                    @if($page["title"] ?? null)<div><h3 class="text-center text-5xl leading-tight" style="font-family: 'Secular One', sans-serif;direction: rtl; -webkit-text-stroke-color: #FFFFFF; -webkit-text-stroke-width: 1px">{{ $page["title"] }}</h3></div>@endif
+                    <div class="text-2xl h-full flex flex-col gap-2 justify-center justify-items-center text-black" style="direction: rtl; padding: 30px 30px 0 30px; height: 460px">
+                        @foreach(explode("\n", $page["content"] ?? "") as $p)
+                            <p @if($page["image"] ?? null)style="-webkit-text-stroke-color: #FFFFFF; -webkit-text-stroke-width: thin" class="text-4xl" @endif>{{ $p }}</p>
+                        @endforeach
+                    </div>
+                    @if($page["pageNum"] ?? null)<div class="text-center text-gray-400">-{{$page["pageNum"]}}-</div>@endif
+                    @if($page["image"] ?? null)</div>@endif
+                @if($page["isCover"] ?? false)
+                    <div class="w-[calc(100%-2rem)] h-full absolute top-0 @if($i == 0) left-0 @else right-0 @endif bottom-0" style="box-shadow: 0 1.1px 1.5px rgba(0,0,0,.4), 0 2.8px 3.9px rgba(0,0,0,.4), 0 5.8px 7.9px rgba(0,0,0,.08), 0 12.0455px 16.4px rgba(0,0,0,.4), 0 33px 45px rgba(0,0,0,.8);"></div>
+                @endif
+            </div>
+        @endforeach
+    </div>
+    <div class="content-center hidden lg:block">
+        <img id="next" class="hover:cursor-pointer" width="100" height="100" src="/images/next3.png" alt="next" onclick="nextt()"/>
+    </div>
 </div>
 <style>
 
@@ -173,4 +181,25 @@
         // direction: "rtl",
         // dir: "rtl",
     });
+
+    function nextt() {
+        aaa.turn('next');
+
+        document.getElementById("previous").classList.remove("hidden");
+        if (aaa.turn('page') === aaa.turn('pages')) {
+            document.getElementById("next").classList.add("hidden");
+        } else {
+            document.getElementById("next").classList.remove("hidden");
+        }
+    }
+    function prevv() {
+        aaa.turn('previous');
+
+        document.getElementById("next").classList.remove("hidden");
+        if (aaa.turn('page') === 1) {
+            document.getElementById("previous").classList.add("hidden");
+        } else {
+            document.getElementById("previous").classList.remove("hidden");
+        }
+    }
 </script>
